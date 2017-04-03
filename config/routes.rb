@@ -1,2 +1,2 @@
-ActionSchema::Engine.routes.draw do
+ActiveSchema::Engine.routes.draw do
 end

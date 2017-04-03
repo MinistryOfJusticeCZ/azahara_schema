@@ -1,4 +1,4 @@
-# ActionSchema
+# ActiveSchema
 Short description and motivation.
 
 ## Usage
@@ -8,7 +8,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'action_schema'
+gem 'active_schema'
 ```
 
 And then execute:
@@ -18,7 +18,7 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install action_schema
+$ gem install active_schema
 ```
 
 ## Contributing

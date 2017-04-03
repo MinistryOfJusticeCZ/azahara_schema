@@ -1,3 +1,3 @@
-module ActionSchema
+module ActiveSchema
   VERSION = '0.1.0'
 end
