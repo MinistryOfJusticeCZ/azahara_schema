@@ -1,3 +1,7 @@
 <% schema.available_filters.each do |name, filter| %>
-  <%= name %>
+  <div class="form-group row">
+    <div class="col-4"><%= label :f, name %></div>
+    <div class="col-2"><%= select :f, name, [['=','=']], value: schema.operator_for(name), class: 'form-control' %></div>
+    <div class="col-6"><%= text_field :f, name, value: schema.value_for(name), class: 'form-control' %></div>
+  </div>
 <% end %>

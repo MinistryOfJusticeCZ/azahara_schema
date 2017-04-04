@@ -4,6 +4,7 @@ require 'active_schema/association_attribute'
 require 'active_schema/outputs'
 require 'active_schema/output'
 require 'active_schema/schema'
+require 'active_schema/model_schema'
 
 module ActiveSchema
   class Engine < ::Rails::Engine
