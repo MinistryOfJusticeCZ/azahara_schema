@@ -7,8 +7,20 @@ module ActiveSchema
       @format = ActiveSchema::FieldFormat.find(type)
     end
 
+    def available_operators
+      format.available_operators
+    end
+
     def type
       format.format_name
+    end
+
+    def arel_field
+      model.arel_table[filter_name]
+    end
+
+    def arel_sort_field
+      arel_field
     end
 
     def filter_name
@@ -34,8 +46,18 @@ module ActiveSchema
     def add_statement(scope, operator, values)
       case operator
       when '='
-        scope.where(filter_name => values)
+        scope.where( arel_field.eq(values) )
+      when '~'
+        scope.where( arel_field.matches("%#{values}%") )
+      when '>='
+        scope.where( arel_field.gteq(values) )
+      when '<='
+        scope.where( arel_field.lteq(values) )
       end
+    end
+
+    def add_sort(scope, order)
+      scope.order( arel_sort_field.public_send(order) )
     end
 
   end

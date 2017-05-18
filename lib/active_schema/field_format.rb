@@ -39,9 +39,16 @@ module ActiveSchema
         ActiveSchema::FieldFormat.add(name, self)
       end
       private_class_method :add
+
+      def available_operators
+        ['=']
+      end
     end
 
     class Number < Base
+      def available_operators
+        super.concat(['>=','<=', '><'])
+      end
     end
 
     class Integer < Number
@@ -50,6 +57,10 @@ module ActiveSchema
 
     class StringFormat < Base
       add 'string'
+
+      def available_operators
+        super.concat(['~'])
+      end
     end
 
     class DateTimeFormat < Base

@@ -14,5 +14,9 @@ module ActiveSchema
       g.test_framework :rspec
       g.fixture_replacement :factory_girl, :dir => 'spec/factories'
     end
+
+    config.to_prepare do
+      ::ApplicationController.helper(ActiveSchema::ApplicationHelper)
+    end
   end
 end

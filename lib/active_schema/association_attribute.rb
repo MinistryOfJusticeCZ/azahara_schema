@@ -1,25 +1,53 @@
+# Author::    Ondřej Ezr  (mailto:oezr@msp.justice.cz)
+# Copyright:: Copyright (c) 2017 Ministry of Justice
+# License::   Distributes under license Open Source Licence pro Veřejnou Správu a Neziskový Sektor v.1
+
 module ActiveSchema
+
+  # The class is attribute for associated record, it is used for working with related records.
+  # ---
+  # TODO: better way of joining the association - mandatory as +joins+ others as left outer, but not includes.
+  # ---
+  #
+  # The class holds schema for related entity.
   class AssociationAttribute < Attribute
 
-    attr_reader :attribute, :schema, :association
+    attr_reader :attribute, :schema
 
-    def initialize(association)
-      @schema = ActiveSchema::Schema.new(association.klass, association: association)
-      @attribute = @schema.main_attribute
-      super(association.klass, association.name.to_s, attribute.type)
-      @association = association
+    delegate :association, to: :schema
+
+    def initialize(association_schema, attribute)
+      @schema = association_schema
+      @attribute = attribute
+      super(association.klass, association.name.to_s+'-'+attribute.name, attribute.type)
+    end
+
+    def arel_field
+      attribute.arel_field
     end
 
     def path
-      @association.name.to_s+'.to_s'
+      association.name.to_s+'.'+attribute.path
     end
 
     def column?
-      association.macro == :belongs_to
+      association.macro == :belongs_to && schema.main_attribute.name == attribute.name
     end
 
     def value(parent)
       parent.public_send(association.name).to_s
+    end
+
+    def add_join(scope)
+      scope.includes(association.name).references(association.name)
+    end
+
+    def add_statement(scope, operator, values)
+      super(add_join(scope), operator, values)
+    end
+
+    def add_sort(scope, order)
+      super(add_join(scope), order)
     end
 
   end

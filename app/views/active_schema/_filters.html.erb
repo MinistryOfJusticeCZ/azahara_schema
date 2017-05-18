@@ -1,7 +1,14 @@
 <% schema.available_filters.each do |name, filter| %>
-  <div class="form-group row">
-    <div class="col-4"><%= label :f, name %></div>
-    <div class="col-2"><%= select :f, name, [['=','=']], value: schema.operator_for(name), class: 'form-control' %></div>
-    <div class="col-6"><%= text_field :f, name, value: schema.value_for(name), class: 'form-control' %></div>
+  <div class="form-group row filter" data-name="<%= name %>">
+    <div class="col-4"><%= label_tag "f[#{name}]", t('activerecord.attributes.'+schema.model.name.underscore+'.'+name, default: name.humanize) %></div>
+    <% if schema.operators_for(name).count > 1 %>
+      <div class="col-2"><%= select_tag "f[#{name}]", options_for_select(operators_for_select(schema, name), schema.operator_for(name)), class: 'form-control operator-field' %></div>
+      <div class="col-6"><%= text_field :f, name, value: schema.value_for(name), class: 'form-control value-field' %></div>
+    <% else %>
+      <div class="col-8">
+        <%= hidden_field_tag "f[#{name}]", schema.operators_for(name).first, class: 'operator-field' %>
+        <%= text_field :f, name, value: schema.value_for(name), class: 'form-control value-field' %>
+      </div>
+    <% end %>
   </div>
 <% end %>
