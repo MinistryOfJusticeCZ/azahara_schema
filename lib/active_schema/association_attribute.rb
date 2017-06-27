@@ -22,6 +22,10 @@ module ActiveSchema
       super(association.klass, association.name.to_s+'-'+attribute.name, attribute.type)
     end
 
+    def available_values
+      attribute.available_values
+    end
+
     def arel_field
       attribute.arel_field
     end
@@ -31,7 +35,7 @@ module ActiveSchema
     end
 
     def column?
-      association.macro == :belongs_to && schema.main_attribute.name == attribute.name
+      association.macro == :belongs_to
     end
 
     def value(parent)

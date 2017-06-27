@@ -23,12 +23,16 @@ module ActiveSchema
       operators_for_filters[filter] = operators
     end
 
-    attr_accessor :model, :column_names, :association
+    attr_accessor :model, :association
 
     def initialize(model, **attributes)
       @model = model
-      @column_names = attributes[:columns]
       @association = attributes[:association]
+      @column_names = attributes[:columns]
+    end
+
+    def column_names
+      @column_names ||= default_columns
     end
 
     def columns
@@ -42,6 +46,19 @@ module ActiveSchema
     def sort
       @sort ||= {}
     end
+
+    # DEFAULTS
+
+    def default_columns
+      [main_attribute_name]
+    end
+
+    # just a dummy implementation
+    def main_attribute_name
+      available_attributes.detect{|att| att.name != 'id' }.name
+    end
+
+    # ACCESSORS
 
     def add_short_filter(name, str)
       attrs = str.split('|')
@@ -109,21 +126,20 @@ module ActiveSchema
       end
     end
 
+    def attribute_for_column(col)
+      Attribute.new(model, col.name, col.type)
+    end
+
     def initialize_available_attributes
       @available_attributes ||= []
       model.columns.each do |col|
-        @available_attributes << Attribute.new(model, col.name, col.type)
+        @available_attributes << attribute_for_column(col)
       end
       available_associations.each do |asoc_schema|
         asoc_schema.available_attributes.each do |asoc_attribute|
           @available_attributes << AssociationAttribute.new(asoc_schema, asoc_attribute)
         end
       end
-    end
-
-    # just a dummy implementation
-    def main_attribute
-      available_attributes.detect{|att| att.name != 'id' }
     end
 
     def outputs
@@ -163,6 +179,14 @@ module ActiveSchema
         params[:f][fname] = "#{attrs[:o]}|#{attrs[:v]}"
       end
       params
+    end
+
+    def uncollapsable_filters
+      {}
+    end
+
+    def collapsable_filters
+      available_filters
     end
 
   end

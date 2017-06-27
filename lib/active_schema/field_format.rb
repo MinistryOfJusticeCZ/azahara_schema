@@ -63,6 +63,14 @@ module ActiveSchema
       end
     end
 
+    class ListFormat < StringFormat
+      add 'list'
+
+      def available_operators
+        ['=']
+      end
+    end
+
     class DateTimeFormat < Base
       add 'datetime'
     end

@@ -1,11 +1,6 @@
-  <%= form_tag(polymorphic_path(schema.model), method: 'get') do |f| %>
-    <div class="clearfix">
-      <button class="btn btn-sm btn-primary pull-right" data-toggle="collapse" data-target="#filters"><%= t(:label_filters) %> <i class="fa fa-angle-double-down"></i></button>
-    </div>
-    <div id="filters" class="schema-filters collapse">
-      <%= render 'active_schema/filters', schema: schema %>
-    </div>
 
+  <%= form_tag(polymorphic_path(schema.model), method: 'get') do |f| %>
+    <%= render 'active_schema/filters', schema: schema %>
     <%= submit_tag t(:label_use_setting), class: 'btn' %>
   <% end %>
 

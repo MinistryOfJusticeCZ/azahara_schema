@@ -11,6 +11,10 @@ module ActiveSchema
       format.available_operators
     end
 
+    def available_values
+      nil
+    end
+
     def type
       format.format_name
     end
