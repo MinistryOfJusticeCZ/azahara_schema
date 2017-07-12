@@ -1,4 +1,5 @@
 ---
 cs:
   label_filters: Filtry
-  label_use_setting: Použít
+  label_advance_filters: Rozšířené
+  label_use_setting: Zobrazit

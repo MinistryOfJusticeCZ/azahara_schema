@@ -43,7 +43,11 @@ module ActiveSchema
     end
 
     def add_join(scope)
-      scope.includes(association.name).references(association.name)
+      if attribute.is_a?(ActiveSchema::AssociationAttribute)
+        scope.includes(association.name => attribute.association.name).references(association.name => attribute.association.name)
+      else
+        scope.includes(association.name).references(association.name)
+      end
     end
 
     def add_statement(scope, operator, values)

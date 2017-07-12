@@ -166,6 +166,7 @@ module ActiveSchema
         filter_params.each{|name, short_filter| add_short_filter(name, short_filter) }
       end
       if params[:sort]
+        @sort = nil
         params[:sort].each do |k, sort|
           add_sort(sort[:path], sort['desc'] == 'true' ? :desc : :asc )
         end

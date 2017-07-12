@@ -1,7 +1,11 @@
-
-  <%= form_tag(polymorphic_path(schema.model), method: 'get') do |f| %>
+  <% if schema.collapsable_filters.any? || lookup_context.template_exists?("#{schema.model.model_name.plural}/_additional_filters") %>
+    <div class="clearfix">
+      <button class="btn btn-sm btn-primary pull-right collapsed" data-toggle="collapse" data-target="#filters_collapsable"><%= t(:label_advance_filters) %> <i class="fa chevron"></i></button>
+    </div>
+  <% end %>
+  <%= form_tag(polymorphic_path(schema.model), method: 'get',  style: "margin-bottom: 10px", class: 'clearfix') do |f| %>
     <%= render 'active_schema/filters', schema: schema %>
-    <%= submit_tag t(:label_use_setting), class: 'btn' %>
+    <%= submit_tag t(:label_use_setting), class: 'btn pull-right' %>
   <% end %>
 
 <script type="text/javascript">
