@@ -1,0 +1,36 @@
+label {
+  color: $gray;
+}
+
+// .form-control {
+//   border-top: none;
+//   border-left: none;
+//   border-right: none;
+//   border-radius: 0;
+// }
+
+.schema-options {
+  .form-actions {
+    text-align: center;
+    margin: 15px 0;
+  }
+}
+
+.schema-filters {
+  .filter {
+    height: $input-height;
+    margin-bottom: 1.5rem;
+    .control-label {
+      // text-align: right;
+      padding-top: $input-padding-y;
+    }
+  }
+  .collapse-actions {
+    .chevron:after {
+      content: "\f077";
+    }
+    .collapsed .chevron:after {
+      content: "\f078";
+    }
+  }
+}

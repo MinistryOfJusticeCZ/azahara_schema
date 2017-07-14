@@ -21,14 +21,14 @@
     <div id="filters_collapsable" class="collapse">
       <% schema.collapsable_filters.each do |name, filter| %>
         <div class="form-group row filter" data-name="<%= name %>">
-          <div class="col-4"><%= label_tag "f[#{name}]", t('activerecord.attributes.'+schema.model.name.underscore+'.'+name, default: name.humanize) %></div>
+          <div class="col-md-2 control-label"><%= label_tag "f[#{name}]", t('activerecord.attributes.'+schema.model.name.underscore+'.'+name, default: name.humanize) %></div>
           <% if schema.operators_for(name).count > 1 %>
-            <div class="col-2"><%= select_tag "f[#{name}]", options_for_select(operators_for_select(schema, name), schema.operator_for(name)), class: 'form-control operator-field' %></div>
-            <div class="col-6">
+            <div class="col-md-2"><%= select_tag "f[#{name}]", options_for_select(operators_for_select(schema, name), schema.operator_for(name)), class: 'form-control operator-field' %></div>
+            <div class="col-md-8">
               <%= filter_field(schema, filter) %>
             </div>
           <% else %>
-            <div class="col-8">
+            <div class="col-md-10">
               <%= hidden_field_tag "f[#{name}]", schema.operators_for(name).first, class: 'operator-field' %>
               <%= filter_field(schema, filter) %>
             </div>
@@ -38,6 +38,9 @@
       <% if lookup_context.template_exists?("#{schema.model.model_name.plural}/_additional_filters") %>
         <%= render "#{schema.model.model_name.plural}/additional_filters", schema: schema %>
       <% end %>
+    </div>
+    <div class="collapse-actions" style="text-align: center;">
+      <a class="btn btn-sm collapsed" data-toggle="collapse" href="#filters_collapsable"><i class="fa chevron"></i></a>
     </div>
   <% end %>
 </div>
