@@ -17,12 +17,14 @@ label {
 }
 
 .schema-filters {
-  .filter {
-    height: $input-height;
-    margin-bottom: 1.5rem;
-    .control-label {
-      // text-align: right;
-      padding-top: $input-padding-y;
+  @include media-breakpoint-up(md) {
+    .filter {
+      height: $input-height;
+      margin-bottom: 1.5rem;
+      .control-label {
+        // text-align: right;
+        padding-top: $input-padding-y;
+      }
     }
   }
   .collapse-actions {
