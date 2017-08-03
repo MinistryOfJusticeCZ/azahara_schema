@@ -1,4 +1,4 @@
-module ActiveSchema
+module AzaharaSchema
   class Outputs
 
     def self.registered_outputs

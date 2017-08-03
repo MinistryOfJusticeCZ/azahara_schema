@@ -1,4 +1,4 @@
-module ActiveSchema
+module AzaharaSchema
   class Output
 
     attr_reader :schema

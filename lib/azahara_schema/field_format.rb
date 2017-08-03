@@ -1,4 +1,4 @@
-module ActiveSchema
+module AzaharaSchema
   module FieldFormat
     def self.add(name, klass)
       all[name.to_s] = klass.instance
@@ -36,7 +36,7 @@ module ActiveSchema
 
       def self.add(name)
         self.format_name = name
-        ActiveSchema::FieldFormat.add(name, self)
+        AzaharaSchema::FieldFormat.add(name, self)
       end
       private_class_method :add
 

@@ -1,5 +1,5 @@
 <%= form_tag(polymorphic_path(schema.model), method: 'get', class: 'schema-options', style: "margin-bottom: 10px") do |f| %>
-  <%= render 'active_schema/filters', schema: schema %>
+  <%= render 'azahara_schema/filters', schema: schema %>
   <div class="form-actions">
     <%= submit_tag t(:label_use_setting), class: 'btn btn-primary' %>
   </div>

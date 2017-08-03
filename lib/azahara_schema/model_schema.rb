@@ -1,4 +1,4 @@
-module ActiveSchema
+module AzaharaSchema
   class ModelSchema < Schema
     def initialize(**attrs)
       super(model, attrs)

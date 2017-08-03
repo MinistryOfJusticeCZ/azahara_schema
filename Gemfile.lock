@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_schema (0.1.0)
+    azahara_schema (0.1.0)
       rails (~> 5.0.2)
 
 GEM
@@ -128,7 +128,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_schema!
+  azahara_schema!
   factory_girl_rails (~> 4.0)
   rspec-rails (~> 2.12.2)
   sqlite3

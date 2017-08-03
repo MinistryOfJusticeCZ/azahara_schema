@@ -1,4 +1,4 @@
 # desc "Explaining what the task does"
-# task :action_schema do
+# task :azahara_schema do
 #   # Task goes here
 # end

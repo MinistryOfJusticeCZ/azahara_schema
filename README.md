@@ -1,5 +1,5 @@
-# ActiveSchema
-Short description and motivation.
+# AzaharaSchema
+
 
 ## Usage
 How to use my plugin.
@@ -8,7 +8,7 @@ How to use my plugin.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'active_schema'
+gem 'azahara_schema'
 ```
 
 And then execute:
@@ -18,7 +18,7 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install active_schema
+$ gem install azahara_schema
 ```
 
 ## Contributing

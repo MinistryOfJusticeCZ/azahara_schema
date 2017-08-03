@@ -1,2 +1,2 @@
-ActiveSchema::Engine.routes.draw do
+AzaharaSchema::Engine.routes.draw do
 end

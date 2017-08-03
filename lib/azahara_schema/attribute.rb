@@ -1,10 +1,10 @@
-module ActiveSchema
+module AzaharaSchema
   class Attribute
     attr_accessor :name, :format, :model
 
     def initialize(model, name, type)
       @name, @model = name, model
-      @format = ActiveSchema::FieldFormat.find(type)
+      @format = AzaharaSchema::FieldFormat.find(type)
     end
 
     def available_operators
@@ -12,7 +12,12 @@ module ActiveSchema
     end
 
     def available_values
-      nil
+      case type
+      when 'list'
+        @model.try(name.to_s.pluralize)
+      else
+        nil
+      end
     end
 
     def type

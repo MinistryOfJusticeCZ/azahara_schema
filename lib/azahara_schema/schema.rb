@@ -1,4 +1,4 @@
-module ActiveSchema
+module AzaharaSchema
   class Schema
 
     def self.schema_for(klass, *attributes)
@@ -6,7 +6,7 @@ module ActiveSchema
       if schema_klass
         schema_klass.new(*attributes)
       else
-        ActiveSchema::Schema.new(klass, *attributes)
+        AzaharaSchema::Schema.new(klass, *attributes)
       end
     end
 
@@ -122,7 +122,7 @@ module ActiveSchema
     def available_associations
       return [] if @association #only first level of association - would need to solve circular dependency first to add next level
       @available_associations ||= model.reflect_on_all_associations.collect do |association|
-        ActiveSchema::Schema.schema_for(association.klass, association: association)
+        AzaharaSchema::Schema.schema_for(association.klass, association: association)
       end
     end
 

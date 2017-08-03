@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount ActionSchema::Engine => "/action_schema"
+  mount AzaharaSchema::Engine => "/azahara_schema"
 end

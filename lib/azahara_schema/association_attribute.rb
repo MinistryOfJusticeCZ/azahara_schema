@@ -2,7 +2,7 @@
 # Copyright:: Copyright (c) 2017 Ministry of Justice
 # License::   Distributes under license Open Source Licence pro Veřejnou Správu a Neziskový Sektor v.1
 
-module ActiveSchema
+module AzaharaSchema
 
   # The class is attribute for associated record, it is used for working with related records.
   # ---
@@ -43,7 +43,7 @@ module ActiveSchema
     end
 
     def add_join(scope)
-      if attribute.is_a?(ActiveSchema::AssociationAttribute)
+      if attribute.is_a?(AzaharaSchema::AssociationAttribute)
         scope.includes(association.name => attribute.association.name).references(association.name => attribute.association.name)
       else
         scope.includes(association.name).references(association.name)

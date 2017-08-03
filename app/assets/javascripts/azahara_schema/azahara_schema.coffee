@@ -18,7 +18,7 @@ class Filter
       ''
 
 
-$.widget 'active_schema.filters',
+$.widget 'azahara_schema.filters',
   options:
     nil: null
   _create: ()->
