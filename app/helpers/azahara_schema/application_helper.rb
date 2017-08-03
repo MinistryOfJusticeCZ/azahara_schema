@@ -14,8 +14,12 @@ module AzaharaSchema
       end
     end
 
+    # translates values to list_values
+    # TODO: not needed to do it for every value - for example districts are not translatable
     def list_values_for_select(attribute)
-      attribute.available_values.collect{|l, val| t(l, scope: [:activerecord, :attributes, attribute.model.model_name.i18n_key, attribute.name.to_s.pluralize], default: l.to_s.humanize) }
+      attribute.available_values.collect do |l, val|
+        [t(l, scope: [:activerecord, :attributes, attribute.model.model_name.i18n_key, attribute.name.to_s.pluralize], default: l.to_s), val]
+      end
     end
 
   end
