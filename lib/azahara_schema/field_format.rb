@@ -45,14 +45,22 @@ module AzaharaSchema
       end
     end
 
-    class Number < Base
+    class NumberFormat < Base
       def available_operators
         super.concat(['>=','<=', '><'])
       end
     end
 
-    class Integer < Number
+    class IntegerFormat < NumberFormat
       add 'integer'
+    end
+
+    class FloatFormat < NumberFormat
+      add 'float'
+    end
+
+    class BooleanFormat < Base
+      add 'boolean'
     end
 
     class StringFormat < Base
@@ -69,6 +77,10 @@ module AzaharaSchema
       def available_operators
         ['=']
       end
+    end
+
+    class DateFormat < Base
+      add 'date'
     end
 
     class DateTimeFormat < Base
