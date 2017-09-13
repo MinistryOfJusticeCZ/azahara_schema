@@ -52,6 +52,10 @@ module AzaharaSchema
       record.public_send(name)
     end
 
+    def add_preload(scope)
+      scope
+    end
+
     def add_statement(scope, operator, values)
       case operator
       when '='
@@ -67,6 +71,10 @@ module AzaharaSchema
 
     def add_sort(scope, order)
       scope.order( arel_sort_field.public_send(order) )
+    end
+
+    def build_json_options!(options)
+      options
     end
 
   end

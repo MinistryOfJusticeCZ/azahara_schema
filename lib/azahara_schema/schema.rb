@@ -2,12 +2,16 @@ module AzaharaSchema
   class Schema
 
     def self.schema_for(klass, *attributes)
-      schema_klass = "#{klass.name}Schema".safe_constantize
-      if schema_klass
-        schema_klass.new(*attributes)
-      else
-        AzaharaSchema::Schema.new(klass, *attributes)
+      klasses = [klass]
+      while klass != klass.base_class
+        klass = klass.superclass
+        klasses << klass
       end
+      klasses.each do |kls|
+        schema_klass = "#{kls.name}Schema".safe_constantize
+        return schema_klass.new(*attributes) if schema_klass
+      end
+      AzaharaSchema::Schema.new(klass, *attributes)
     end
 
     def self.enabled_filters(*filter_names)
@@ -36,7 +40,7 @@ module AzaharaSchema
     end
 
     def columns
-      @columns ||= available_attributes.select{|attribute| attribute.column? && column_names.include?(attribute.name) }
+      @columns ||= available_attributes_hash.slice(*column_names).values
     end
 
     def filters
@@ -103,6 +107,10 @@ module AzaharaSchema
       @available_attributes
     end
 
+    def available_attributes_hash
+      available_attributes.inject({}){|obj, aa| obj[aa.name] = aa; obj }
+    end
+
     def available_columns
       @available_columns ||= available_attributes.select{|att| att.column? }
     end
@@ -148,6 +156,9 @@ module AzaharaSchema
 
     def entities
       scope = model.respond_to?(:visible) ? model.visible : model.all
+      columns.each do |col|
+        scope = col.add_preload(scope)
+      end
       filters.each do |name, attrs|
         scope = available_filters[name].add_statement(scope, attrs[:o], attrs[:v])
       end
@@ -156,6 +167,15 @@ module AzaharaSchema
         scope = att.add_sort(scope, order) if att
       end
       scope
+    end
+
+    def build_json_options!(options={})
+      columns.each{|col| col.build_json_options!(options) }
+      options
+    end
+
+    def as_json(options={})
+      entities.as_json(build_json_options!(options))
     end
 
 

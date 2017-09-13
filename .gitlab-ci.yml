@@ -1,0 +1,38 @@
+image: ruby:2.3
+
+variables:
+  GIT_SSL_NO_VERIFY: "true"
+
+before_script:
+  - export http_proxy=http://194.213.41.2:8080
+  - export no_proxy="git.servis.justice.cz"
+
+stages:
+  - test
+  - deploy
+
+test:2.3:
+  before_script:
+    - export LANG=en_US.UTF-8
+    - export LANGUAGE=en_US.UTF-8
+    - export LC_ALL=en_US.UTF-8
+    - export RUBYOPT="-KU -E utf-8:utf-8"
+  script:
+    - BASE_URL=`echo $CI_REPOSITORY_URL | sed "s;\/*$CI_PROJECT_PATH.*;;"`
+    - REPO_URL="$BASE_URL/libraries/azahara_schema.git"
+    - REPO_DIR=libraries/azahara_schema
+    - rm -fr $REPO_DIR
+    - git clone $REPO_URL $REPO_DIR
+    - "sed -i \"s|gem 'azahara_schema', path: '.*'|gem 'azahara_schema', path: '$REPO_DIR'|g\" Gemfile"
+    - http_proxy=194.213.41.2:8080 RAILS_ENV=test bundle install
+    - rake db:migrate RAILS_ENV=test
+    - rspec
+
+deploy_gem:
+  stage: deploy
+  script:
+    - 'echo "---\n:rubygems_api_key: $RUBYGEMS_API_KEY"'
+    - gem build azahara_schema.gemspec
+    - gem push azahara_schema-*
+  only:
+    - master

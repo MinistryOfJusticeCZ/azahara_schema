@@ -50,12 +50,27 @@ module AzaharaSchema
       end
     end
 
+    def add_preload(scope)
+      if attribute.is_a?(AzaharaSchema::AssociationAttribute)
+        scope.preload(association.name => attribute.association.name)
+      else
+        scope.preload(association.name)
+      end
+    end
+
     def add_statement(scope, operator, values)
       super(add_join(scope), operator, values)
     end
 
     def add_sort(scope, order)
       super(add_join(scope), order)
+    end
+
+    def build_json_options!(options)
+      options[:include] ||= {}
+      options[:include][association.name.to_sym] ||= {}
+      attribute.build_json_options!(options[:include][association.name.to_sym])
+      options
     end
 
   end
