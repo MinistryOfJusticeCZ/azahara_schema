@@ -25,7 +25,7 @@ test:2.3:
 deploy_gem:
   stage: deploy
   script:
-    - 'echo "---\n:rubygems_api_key: $RUBYGEMS_API_KEY"'
+    - 'echo "---\n:rubygems_api_key: $RUBYGEMS_API_KEY" > ~/.gem/credentials'
     - gem build azahara_schema.gemspec
     - gem push azahara_schema-*
   only:
