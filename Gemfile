@@ -13,5 +13,5 @@ gemspec
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
 
-gem "rspec-rails", "~> 2.12.2"
+gem "rspec-rails", '~> 3.6'
 gem "factory_girl_rails", "~> 4.0"
