@@ -1,3 +1,5 @@
+[![pipeline status](https://git.servis.justice.cz/libraries/azahara_schema/badges/master/pipeline.svg)](https://git.servis.justice.cz/libraries/azahara_schema/commits/master)
+
 # AzaharaSchema
 
 Azahara schema helps you to work with your model view.
