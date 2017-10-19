@@ -1,3 +1,5 @@
+require 'active_support' #Hash.slice
+
 module AzaharaSchema
   class Schema
 
@@ -33,6 +35,11 @@ module AzaharaSchema
       @model = model
       @association = attributes[:association]
       @column_names = attributes[:columns]
+    end
+
+    def column_names=(values)
+      @column_names = values
+      @columns = nil
     end
 
     def column_names
@@ -116,15 +123,22 @@ module AzaharaSchema
     end
 
     def enabled_filters
-      if self.class.enabled_filters.any?
-        self.class.enabled_filters.collect{|f_name| available_attributes.detect{|attr| attr.name == f_name } }.compact
-      else
-        available_attributes
-      end
+
+    end
+
+    def disabled_filters
+      []
+    end
+
+    def enabled_filter_names
+      names = self.class.enabled_filters if self.class.enabled_filters.any?
+      names ||= available_attributes_hash.keys
+      names &= enabled_filters if enabled_filters
+      names -= disabled_filters
     end
 
     def available_filters
-      @available_filters ||= enabled_filters.select{|att| att.filter? }.collect{|att| [att.filter_name, att] }.to_h
+      @available_filters ||= available_attributes_hash.slice(*enabled_filter_names)
     end
 
     def available_associations
@@ -185,6 +199,9 @@ module AzaharaSchema
         filter_params = params[:f].permit(available_filters.keys).to_h
         filter_params.each{|name, short_filter| add_short_filter(name, short_filter) }
       end
+      if params[:c].is_a?(Array)
+        self.column_names = params[:c].to_a
+      end
       if params[:sort]
         @sort = nil
         params[:sort].each do |k, sort|
@@ -199,6 +216,7 @@ module AzaharaSchema
       filters.each do |fname, attrs|
         params[:f][fname] = "#{attrs[:o]}|#{attrs[:v]}"
       end
+      params[:c] = column_names
       params
     end
 
