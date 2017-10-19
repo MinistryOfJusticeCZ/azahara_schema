@@ -8,6 +8,23 @@ Its basic usage is for your index method. But can be used even as a master-detai
 * Defines easy api over you model
 * Lets you define your own outputs and manages them for you.
 
+## Installation
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'azahara_schema'
+```
+
+And then execute:
+```bash
+$ bundle
+```
+
+Or install it yourself as:
+```bash
+$ gem install azahara_schema
+```
+
 ## Usage
 Default usage is only for Rails.
 
@@ -27,22 +44,32 @@ UserSchema.new
 Azahara takes the name of model before Schema and uses it for looking for model class.
 Alternatively you can overwrite method ```model``` and let it return class for your model.
 
-## Installation
-Add this line to your application's Gemfile:
 
+### Defining enabled/disabled filters
+
+In your inherited class you can globally set enabled filter - for azahara not to populate unwanted parameters of your model.
 ```ruby
-gem 'azahara_schema'
+self.enabled_filters 'attr_name1', 'attr_name2'
 ```
+Second option is defining those on instance - it is preferable solution and is more straight forward.
+Here you can even solve the permissions.
+```ruby
+def enabled_filters
+  filters = ['attr_name1', 'attr_name2']
+  filters << 'attr_name3' if User.current.admin?
+  filters
+end
+```
+Alternative for it is just black list attributes you do not want to have as filters.
+```ruby
+def disabled_filters
+  to_disable = []
+  to_disable << ['attr_name3'] if !User.current.admin?
+  to_disable
+end
+```
+Or you can use all those methods together.
 
-And then execute:
-```bash
-$ bundle
-```
-
-Or install it yourself as:
-```bash
-$ gem install azahara_schema
-```
 
 ## Contributing
 Contribution directions go here.
