@@ -31,4 +31,4 @@ deploy_gem:
     - gem build azahara_schema.gemspec
     - gem push azahara_schema-*
   only:
-    - master
+    - tags
