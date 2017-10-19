@@ -12,13 +12,18 @@ stages:
   - deploy
 
 test:2.3:
+  cache:
+    untracked: true
+    key: "$CI_BUILD_REF_NAME"
+    paths:
+      - cache/bundler/
   before_script:
     - export LANG=en_US.UTF-8
     - export LANGUAGE=en_US.UTF-8
     - export LC_ALL=en_US.UTF-8
     - export RUBYOPT="-KU -E utf-8:utf-8"
   script:
-    - http_proxy=194.213.41.2:8080 RAILS_ENV=test bundle install
+    - http_proxy=194.213.41.2:8080 https_proxy=194.213.41.2:8080 RAILS_ENV=test bundle install --path=cache/bundler --without production --jobs $(nproc)  "${FLAGS[@]}"
     - rake db:migrate RAILS_ENV=test
     - rspec
 
