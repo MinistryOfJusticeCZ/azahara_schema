@@ -66,6 +66,8 @@ module AzaharaSchema
         scope.where( arel_field.gteq(values) )
       when '<='
         scope.where( arel_field.lteq(values) )
+      else
+        throw 'Unknown operator ' + operator.to_s
       end
     end
 

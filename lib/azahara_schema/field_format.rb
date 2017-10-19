@@ -59,6 +59,10 @@ module AzaharaSchema
       add 'float'
     end
 
+    class DecimalFormat < FloatFormat
+      add 'decimal'
+    end
+
     class BooleanFormat < Base
       add 'boolean'
     end
