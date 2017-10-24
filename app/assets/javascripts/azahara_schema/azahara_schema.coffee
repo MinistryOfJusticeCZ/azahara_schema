@@ -5,7 +5,9 @@ class Filter
     that = this
     @hiddenEl = $('<input>', {name: @valueEl.attr('name'), type: 'hidden'}).insertAfter(@valueEl)
     chngFnc = (evt)->
-      that.hiddenEl.val(that.shortValue())
+      short_val = that.shortValue()
+      that.hiddenEl.val(short_val)
+      that.hiddenEl.prop('disabled', short_val == '')
 
     @operatorEl.change(chngFnc)
     @valueEl.change(chngFnc)
@@ -28,3 +30,6 @@ $.widget 'azahara_schema.filters',
       that.filters.push new Filter($(this).data('name'), $(this).find('.operator-field'), $(this).find('.value-field'))
 
     @form = @element.closest('form')
+    @form.on 'submit', ()->
+      that.form.find('.operator-field').prop('disabled', true)
+      that.form.find('.value-field').prop('disabled', true)

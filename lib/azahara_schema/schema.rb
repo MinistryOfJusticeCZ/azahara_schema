@@ -29,11 +29,12 @@ module AzaharaSchema
       operators_for_filters[filter] = operators
     end
 
-    attr_accessor :model, :association
+    attr_accessor :model, :association, :parent_schema
 
     def initialize(model, **attributes)
       @model = model
       @association = attributes[:association]
+      @parent_schema = attributes[:parent_schema]
       @column_names = attributes[:columns]
     end
 
@@ -55,7 +56,7 @@ module AzaharaSchema
     end
 
     def sort
-      @sort ||= {}
+      @sort ||= default_sort
     end
 
     # DEFAULTS
@@ -64,9 +65,17 @@ module AzaharaSchema
       [main_attribute_name]
     end
 
+    def default_sort
+      {}
+    end
+
     # just a dummy implementation
     def main_attribute_name
       available_attributes.detect{|att| att.name != 'id' }.name
+    end
+
+    def follow_nested_relations
+      true
     end
 
     # ACCESSORS
@@ -141,10 +150,15 @@ module AzaharaSchema
       @available_filters ||= available_attributes_hash.slice(*enabled_filter_names)
     end
 
+    def association_path
+      @association_path ||= parent_schema ? ( [association.name].concat(parent_schema.association_path) ) : []
+    end
+
     def available_associations
-      return [] if @association #only first level of association - would need to solve circular dependency first to add next level
-      @available_associations ||= model.reflect_on_all_associations.collect do |association|
-        AzaharaSchema::Schema.schema_for(association.klass, association: association)
+      @available_associations ||= model.reflect_on_all_associations.select do |association|
+        association.klass != model && !association_path.include?( association.name.to_s.singularize.to_sym ) && !association_path.include?( association.name.to_s.pluralize.to_sym )
+      end.collect do |association|
+        AzaharaSchema::Schema.schema_for(association.klass, parent_schema: self, association: association)
       end
     end
 
@@ -159,7 +173,7 @@ module AzaharaSchema
       end
       available_associations.each do |asoc_schema|
         asoc_schema.available_attributes.each do |asoc_attribute|
-          @available_attributes << AssociationAttribute.new(asoc_schema, asoc_attribute)
+          @available_attributes << AssociationAttribute.new(model, asoc_schema, asoc_attribute)
         end
       end
     end

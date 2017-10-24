@@ -2,7 +2,7 @@
   <div id="filters_uncollapsable">
     <% schema.uncollapsable_filters.each do |name, filter| %>
       <div class="form-group row filter" data-name="<%= name %>">
-        <div class="col-md-2 control-label"><%= label_tag "f[#{name}]", t('activerecord.attributes.'+schema.model.name.underscore+'.'+name, default: name.humanize) %></div>
+        <div class="col-md-2 control-label"><%= label_tag "f[#{name}]", filter.attribute_name.human %></div>
         <% if schema.operators_for(name).count > 1 %>
           <div class="col-md-2"><%= select_tag "f[#{name}]", options_for_select(operators_for_select(schema, name), schema.operator_for(name)), class: 'form-control operator-field' %></div>
           <div class="col-md-8">

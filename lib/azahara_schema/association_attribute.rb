@@ -16,10 +16,10 @@ module AzaharaSchema
 
     delegate :association, to: :schema
 
-    def initialize(association_schema, attribute)
+    def initialize(model, association_schema, attribute)
       @schema = association_schema
       @attribute = attribute
-      super(association.klass, association.name.to_s+'-'+attribute.name, attribute.type)
+      super(model, association.name.to_s+'-'+attribute.name, attribute.type)
     end
 
     def available_values
@@ -39,25 +39,26 @@ module AzaharaSchema
     end
 
     def value(parent)
-      parent.public_send(association.name).to_s
+      if association.macro == :has_many
+        parent.public_send(association.name).collect{|record| attribute.value( record )}.flatten
+      else
+        attribute.value( parent.public_send(association.name) )
+      end
+    end
+
+    def association_hash
+      { association.name => attribute.association_hash }
     end
 
     def add_join(scope)
-      if attribute.is_a?(AzaharaSchema::AssociationAttribute)
-        scope.includes(association.name => attribute.association.name).references(association.name => attribute.association.name)
-      else
-        scope.includes(association.name).references(association.name)
-      end
+      scope.includes(association_hash).references(association_hash)
     end
 
     def add_preload(scope)
-      if attribute.is_a?(AzaharaSchema::AssociationAttribute)
-        scope.preload(association.name => attribute.association.name)
-      else
-        scope.preload(association.name)
-      end
+      scope.preload(association_hash)
     end
 
+    # TODO: heuristic for when add left outer join and when add inner join
     def add_statement(scope, operator, values)
       super(add_join(scope), operator, values)
     end
