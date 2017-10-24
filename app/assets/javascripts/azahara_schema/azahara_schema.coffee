@@ -30,3 +30,6 @@ $.widget 'azahara_schema.filters',
       that.filters.push new Filter($(this).data('name'), $(this).find('.operator-field'), $(this).find('.value-field'))
 
     @form = @element.closest('form')
+    @form.on 'submit', ()->
+      that.form.find('.operator-field').prop('disabled', true)
+      that.form.find('.value-field').prop('disabled', true)
