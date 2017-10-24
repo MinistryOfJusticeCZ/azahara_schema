@@ -46,8 +46,8 @@ module AzaharaSchema
       end
     end
 
-    def association_hash(child_hash = {})
-      attribute.association_hash( { association.name => child_hash } )
+    def association_hash
+      { association.name => attribute.association_hash }
     end
 
     def add_join(scope)

@@ -83,8 +83,8 @@ module AzaharaSchema
       AzaharaSchema::AttributeName.new(self)
     end
 
-    def association_hash(child_hash = {})
-      child_hash
+    def association_hash
+      {}
     end
 
   end
