@@ -1,6 +1,7 @@
 require 'azahara_schema/field_format'
 require 'azahara_schema/attribute'
 require 'azahara_schema/association_attribute'
+require 'azahara_schema/attribute_name'
 require 'azahara_schema/outputs'
 require 'azahara_schema/output'
 require 'azahara_schema/schema'

@@ -79,5 +79,9 @@ module AzaharaSchema
       options
     end
 
+    def attribute_name
+      AzaharaSchema::AttributeName.new(self)
+    end
+
   end
 end
