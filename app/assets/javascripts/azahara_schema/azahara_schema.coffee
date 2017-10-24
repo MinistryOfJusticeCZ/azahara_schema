@@ -5,7 +5,9 @@ class Filter
     that = this
     @hiddenEl = $('<input>', {name: @valueEl.attr('name'), type: 'hidden'}).insertAfter(@valueEl)
     chngFnc = (evt)->
-      that.hiddenEl.val(that.shortValue())
+      short_val = that.shortValue()
+      that.hiddenEl.val(short_val)
+      that.hiddenEl.prop('disabled', short_val == '')
 
     @operatorEl.change(chngFnc)
     @valueEl.change(chngFnc)
