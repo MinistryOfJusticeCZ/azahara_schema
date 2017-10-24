@@ -26,8 +26,9 @@ module AzaharaSchema
 
     def i18n_fallback_keys
       if attribute.respond_to?(:attribute)
-        keys = [ ('activerecord.attributes.' + model_i18n_key.to_s + '.' + attribute.attribute.attribute_name.i18n_key.to_s).to_sym ]
-        keys.concat( attribute.attribute.attribute_name.i18n_fallback_keys )
+        parent_attr_name = attribute.attribute.attribute_name
+        keys = [ parent_attr_name.i18n_scoped_key.to_sym ]
+        keys.concat( parent_attr_name.i18n_fallback_keys )
         keys
       else
         [ i18n_scoped_key.to_sym ]

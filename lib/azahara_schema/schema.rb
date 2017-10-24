@@ -151,12 +151,12 @@ module AzaharaSchema
     end
 
     def association_path
-      @association_path ||= parent_schema ? ( parent_schema.association_path << association.name ) : [model.model_name.i18n_key]
+      @association_path ||= parent_schema ? ( [association.name].concat(parent_schema.association_path) )
     end
 
     def available_associations
       @available_associations ||= model.reflect_on_all_associations.select do |association|
-        !association_path.include?( association.name )
+        association.klass != model && !association_path.include?( association.name )
       end.collect do |association|
         AzaharaSchema::Schema.schema_for(association.klass, parent_schema: self, association: association)
       end
@@ -173,7 +173,7 @@ module AzaharaSchema
       end
       available_associations.each do |asoc_schema|
         asoc_schema.available_attributes.each do |asoc_attribute|
-          @available_attributes << AssociationAttribute.new(asoc_schema, asoc_attribute)
+          @available_attributes << AssociationAttribute.new(model, asoc_schema, asoc_attribute)
         end
       end
     end
