@@ -156,7 +156,6 @@ module AzaharaSchema
 
     def available_associations
       @available_associations ||= model.reflect_on_all_associations.select do |association|
-        pp association.name
         association.klass != model && !association_path.include?( association.name.to_s.singularize.to_sym ) && !association_path.include?( association.name.to_s.pluralize.to_sym )
       end.collect do |association|
         AzaharaSchema::Schema.schema_for(association.klass, parent_schema: self, association: association)
