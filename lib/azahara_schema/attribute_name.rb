@@ -7,7 +7,6 @@ module AzaharaSchema
       @attribute = attribute
     end
 
-    # should take model, where the attribute is defined - but we have only model from associated attribute
     def human
       I18n.t(i18n_scoped_key, default: i18n_fallback_keys)
     end
