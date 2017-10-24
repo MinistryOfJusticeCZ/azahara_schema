@@ -151,12 +151,13 @@ module AzaharaSchema
     end
 
     def association_path
-      @association_path ||= parent_schema ? ( [association.name].concat(parent_schema.association_path) )
+      @association_path ||= parent_schema ? ( [association.name].concat(parent_schema.association_path) ) : []
     end
 
     def available_associations
       @available_associations ||= model.reflect_on_all_associations.select do |association|
-        association.klass != model && !association_path.include?( association.name )
+        pp association.name
+        association.klass != model && !association_path.include?( association.name.to_s.singularize.to_sym ) && !association_path.include?( association.name.to_s.pluralize.to_sym )
       end.collect do |association|
         AzaharaSchema::Schema.schema_for(association.klass, parent_schema: self, association: association)
       end
