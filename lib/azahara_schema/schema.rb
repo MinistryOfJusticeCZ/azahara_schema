@@ -203,7 +203,9 @@ module AzaharaSchema
     end
 
     def as_json(options={})
-      entities.as_json(build_json_options!(options))
+      res_ary = entities.as_json(build_json_options!(options))
+      columns.each{|col| res_ary.each{|attr_hash| attr_hash[col.name] = col.available_values.detect{|l, v| v == attr_hash[col.name] }.try(:[], 0) } if col.type == 'love' }
+      res_ary
     end
 
 

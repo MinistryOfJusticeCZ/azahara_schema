@@ -83,6 +83,10 @@ module AzaharaSchema
       end
     end
 
+    class LoveFormat < ListFormat
+      add 'love'
+    end
+
     class DateFormat < Base
       add 'date'
     end

@@ -36,6 +36,7 @@ module AzaharaSchema
       name
     end
 
+    # Path in json structure
     def path
       name
     end
