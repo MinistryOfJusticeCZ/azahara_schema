@@ -51,6 +51,10 @@ module AzaharaSchema
       true
     end
 
+    def aggregable?
+      format.aggregable?
+    end
+
     def value(record)
       record.public_send(name)
     end

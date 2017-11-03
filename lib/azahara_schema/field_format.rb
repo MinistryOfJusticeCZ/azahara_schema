@@ -47,11 +47,19 @@ module AzaharaSchema
       def available_operators
         ['=']
       end
+
+      def aggregable?
+        false
+      end
     end
 
     class NumberFormat < Base
       def available_operators
         super.concat(['>=','<=', '><'])
+      end
+
+      def aggregable?
+        true
       end
     end
 

@@ -177,7 +177,10 @@ module AzaharaSchema
       end
       available_associations.each do |asoc_schema|
         asoc_schema.available_attributes.each do |asoc_attribute|
-          @available_attributes << AssociationAttribute.new(model, asoc_schema, asoc_attribute)
+          next if asoc_attribute.is_a?(AggregationAttribute)
+          added_attribute = AssociationAttribute.new(model, asoc_schema, asoc_attribute)
+          @available_attributes << added_attribute
+          @available_attributes << AggregationAttribute.new(model, added_attribute) if asoc_attribute.aggregable?
         end
       end
     end
@@ -206,10 +209,19 @@ module AzaharaSchema
       options
     end
 
+    def entity_as_json(entity, options=nil)
+      attr_hash = entity.as_json(options)
+      # TODO serializable_add_includes(options) do |association, records, opts|
+      columns.each do |col|
+        attr_hash[col.name] = col.available_values.detect{|l, v| v == attr_hash[col.name] }.try(:[], 0) if col.type == 'love'
+        attr_hash[col.name] = col.value(entity) if col.is_a?(AzaharaSchema::AggregationAttribute)
+      end
+      attr_hash
+    end
+
     def as_json(options={})
-      res_ary = entities.as_json(build_json_options!(options))
-      columns.each{|col| res_ary.each{|attr_hash| attr_hash[col.name] = col.available_values.detect{|l, v| v == attr_hash[col.name] }.try(:[], 0) } if col.type == 'love' }
-      res_ary
+      build_json_options!(options)
+      entities.collect{|entity| entity_as_json(entity, options) }
     end
 
 

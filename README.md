@@ -28,6 +28,9 @@ $ gem install azahara_schema
 ```
 
 ## Usage
+
+Detailed developers documentation can be found at [Documentation](https://git.servis.justice.cz/libraries/azahara_schema/wikis/home).
+
 Default usage is only for Rails.
 
 You basically need just this:
