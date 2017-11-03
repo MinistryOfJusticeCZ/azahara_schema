@@ -1,3 +1,5 @@
+require 'azahara_schema/field_format'
+
 module AzaharaSchema
   class Attribute
     attr_accessor :name, :format, :model
@@ -58,15 +60,18 @@ module AzaharaSchema
     end
 
     def add_statement(scope, operator, values)
+      values = [values] unless values.is_a?(Array)
       case operator
       when '='
-        scope.where( arel_field.eq(values) )
+        scope.where( arel_field.in(values) )
       when '~'
-        scope.where( arel_field.matches("%#{values}%") )
+        arl = arel_field.matches("%#{values[0]}%")
+        values[1..-1].each{|v| arl = arl.or( arel_field.matches("%#{v}%") ) }
+        scope.where( arl )
       when '>='
-        scope.where( arel_field.gteq(values) )
+        scope.where( arel_field.gteq(values.map(&:to_f).min) )
       when '<='
-        scope.where( arel_field.lteq(values) )
+        scope.where( arel_field.lteq(values.map(&:to_f).max) )
       else
         throw 'Unknown operator ' + operator.to_s
       end

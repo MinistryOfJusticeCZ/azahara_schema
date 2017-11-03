@@ -83,10 +83,11 @@ module AzaharaSchema
     def add_short_filter(name, str)
       attrs = str.split('|')
       if attrs.size == 2
-        add_filter(name, attrs.first, attrs.second)
+        operator, values = attrs
       elsif attrs.size == 1
-        add_filter(name, '=', attrs.first)
+        operator, values = '=', attrs.first
       end
+      add_filter(name, operator, values.split('\\'))
     end
 
     def add_filter(name, operator, values)

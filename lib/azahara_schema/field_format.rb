@@ -1,3 +1,7 @@
+require 'singleton'
+require 'active_support' #class_attribute
+require 'active_support/core_ext' #class_attribute
+
 module AzaharaSchema
   module FieldFormat
     def self.add(name, klass)

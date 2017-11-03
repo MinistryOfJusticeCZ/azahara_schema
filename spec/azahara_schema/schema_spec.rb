@@ -4,33 +4,76 @@ require 'azahara_schema/schema'
 
 RSpec.describe AzaharaSchema::Schema do
 
-  describe '#available_filters' do
+  context 'with stubed schema' do
     let(:model) { class_spy('User') }
     let(:attributes) do
       [
-        instance_double('AzaharaSchema::Attribute', name: 'id'),
-        instance_double('AzaharaSchema::Attribute', name: 'name'),
-        instance_double('AzaharaSchema::Attribute', name: 'created_at')
+        instance_double('AzaharaSchema::Attribute', name: 'id', type: 'integer'),
+        instance_double('AzaharaSchema::Attribute', name: 'name', type: 'string'),
+        instance_double('AzaharaSchema::Attribute', name: 'created_at', type: 'datetime')
       ]
     end
-    subject { s = AzaharaSchema::Schema.new(model); allow(s).to receive(:available_attributes).and_return(attributes); s }
+    let(:schema) { s = AzaharaSchema::Schema.new(model); allow(s).to receive(:available_attributes).and_return(attributes); s }
 
-    context 'with enabled_filters overwritten' do
-      before(:each) { allow(AzaharaSchema::Schema).to receive(:enabled_filters).and_return(['name', 'created_at']) }
+    describe '#available_filters' do
 
-      it 'returns attributes enabled on class' do
-        expect(subject.available_filters.keys).to eq(['name', 'created_at'])
-      end
+      context 'with enabled_filters overwritten' do
+        before(:each) { allow(AzaharaSchema::Schema).to receive(:enabled_filters).and_return(['name', 'created_at']) }
 
-      it 'returns just attributes enabled on both - class and instance' do
-        allow(subject).to receive(:enabled_filters).and_return(['name'])
-        expect(subject.available_filters.keys).to eq(['name'])
-      end
+        it 'returns attributes enabled on class' do
+          expect(schema.available_filters.keys).to eq(['name', 'created_at'])
+        end
 
-      it 'returns attributes enabled on class but without disabled on instance' do
-        allow(subject).to receive(:disabled_filters).and_return(['created_at'])
-        expect(subject.available_filters.keys).to eq(['name'])
+        it 'returns just attributes enabled on both - class and instance' do
+          allow(schema).to receive(:enabled_filters).and_return(['name'])
+          expect(schema.available_filters.keys).to eq(['name'])
+        end
+
+        it 'returns attributes enabled on class but without disabled on instance' do
+          allow(schema).to receive(:disabled_filters).and_return(['created_at'])
+          expect(schema.available_filters.keys).to eq(['name'])
+        end
       end
     end
+
+    describe 'filters' do
+      let(:scope) { instance_double('ActiveRecord::Relation', model: model) }
+
+      before(:each) do
+        allow(model).to receive(:visible).and_return(scope)
+      end
+
+      it 'call attribute #add_statement' do
+        values = ['Vondracek']
+        schema.column_names = []
+        expect(attributes[1]).to receive(:add_statement).with(scope, '~', values)
+        schema.add_filter('name', '~', values)
+        schema.entities
+      end
+    end
+
+    describe '#add_short_filter' do
+      it 'with operator and one value' do
+        values = ['A']
+        expect(schema).to receive(:add_filter).with('name', '~', values)
+        schema.add_short_filter('name', '~|A')
+      end
+      it 'without operator' do
+        values = ['A']
+        expect(schema).to receive(:add_filter).with('name', '=', values)
+        schema.add_short_filter('name', 'A')
+      end
+      it 'without operator with two values' do
+        values = ['A', 'B']
+        expect(schema).to receive(:add_filter).with('name', '=', values)
+        schema.add_short_filter('name', 'A\B')
+      end
+      it 'with operator and two values' do
+        values = ['A', 'B']
+        expect(schema).to receive(:add_filter).with('name', '=', values)
+        schema.add_short_filter('name', 'A\B')
+      end
+    end
+
   end
 end
