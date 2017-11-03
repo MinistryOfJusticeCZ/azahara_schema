@@ -32,7 +32,6 @@ deploy_gem:
   script:
     - mkdir -p ~/.gem/
     - 'echo -e "---\n:rubygems_api_key: $RUBYGEMS_API_KEY" > ~/.gem/credentials && chmod 600 ~/.gem/credentials'
-    - cat ~/.gem/credentials
     - gem build azahara_schema.gemspec
     - gem push azahara_schema-*
   only:
