@@ -30,12 +30,17 @@ module AzaharaSchema
     end
 
     attr_accessor :model, :association, :parent_schema
+    attr_accessor :search_query
 
     def initialize(model, **attributes)
       @model = model
       @association = attributes[:association]
       @parent_schema = attributes[:parent_schema]
       @column_names = attributes[:columns]
+    end
+
+    def searchable_attributes
+      @searchable_attributes ||= available_attributes.select{|a| a.is_a?(Attribute) && a.searchable? }
     end
 
     def column_names=(values)
@@ -189,6 +194,10 @@ module AzaharaSchema
       Outputs.new(self)
     end
 
+    def tokenize_search_query(query=search_query)
+      query.split if query
+    end
+
     def entities
       scope = model.respond_to?(:visible) ? model.visible : model.all
       columns.each do |col|
@@ -200,6 +209,11 @@ module AzaharaSchema
       sort.each do |name, order|
         att = attribute(name)
         scope = att.add_sort(scope, order) if att
+      end
+      if (tokens = tokenize_search_query)
+        arl = searchable_attributes[0].arel_statement('~', tokens)
+        searchable_attributes[1..-1].each{|att| arl = arl.or( att.arel_statement('~', tokens) ) }
+        scope = scope.where(arl)
       end
       scope
     end
@@ -240,6 +254,7 @@ module AzaharaSchema
           add_sort(sort[:path], sort['desc'] == 'true' ? :desc : :asc )
         end
       end
+      self.search_query = params[:q] if params[:q]
     end
 
     def to_param
@@ -249,6 +264,7 @@ module AzaharaSchema
         params[:f][fname] = "#{attrs[:o]}|#{attrs[:v]}"
       end
       params[:c] = column_names
+      params[:q] = search_query if params[:q]
       params
     end
 

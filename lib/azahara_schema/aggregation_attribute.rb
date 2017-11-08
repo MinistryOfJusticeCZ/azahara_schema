@@ -12,6 +12,10 @@ module AzaharaSchema
       super(model, 'sum:'+attribute.name, attribute.type)
     end
 
+    def searchable?
+      false
+    end
+
     def arel_field
       attribute.arel_field.sum
     end

@@ -55,8 +55,30 @@ module AzaharaSchema
       format.aggregable?
     end
 
+    def searchable?
+      format.searchable?
+    end
+
     def value(record)
       record.public_send(name)
+    end
+
+    def arel_statement(operator, values)
+      values = [values] unless values.is_a?(Array)
+      case operator
+      when '='
+        arel_field.in(values)
+      when '~'
+        arl = arel_field.matches("%#{values[0]}%")
+        values[1..-1].each{|v| arl = arl.or( arel_field.matches("%#{v}%") ) }
+        arl
+      when '>='
+        arel_field.gteq(values.map(&:to_f).min)
+      when '<='
+        arel_field.lteq(values.map(&:to_f).max)
+      else
+        throw 'Unknown operator ' + operator.to_s
+      end
     end
 
     def add_preload(scope)
@@ -64,21 +86,7 @@ module AzaharaSchema
     end
 
     def add_statement(scope, operator, values)
-      values = [values] unless values.is_a?(Array)
-      case operator
-      when '='
-        scope.where( arel_field.in(values) )
-      when '~'
-        arl = arel_field.matches("%#{values[0]}%")
-        values[1..-1].each{|v| arl = arl.or( arel_field.matches("%#{v}%") ) }
-        scope.where( arl )
-      when '>='
-        scope.where( arel_field.gteq(values.map(&:to_f).min) )
-      when '<='
-        scope.where( arel_field.lteq(values.map(&:to_f).max) )
-      else
-        throw 'Unknown operator ' + operator.to_s
-      end
+      scope.where(arel_statement(operator, values))
     end
 
     def add_sort(scope, order)

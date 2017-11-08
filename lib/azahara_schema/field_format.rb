@@ -51,6 +51,10 @@ module AzaharaSchema
       def aggregable?
         false
       end
+
+      def searchable?
+        false
+      end
     end
 
     class NumberFormat < Base
@@ -84,6 +88,10 @@ module AzaharaSchema
 
       def available_operators
         super.concat(['~'])
+      end
+
+      def searchable?
+        true
       end
     end
 

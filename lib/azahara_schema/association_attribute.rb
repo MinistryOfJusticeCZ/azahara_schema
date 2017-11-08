@@ -38,6 +38,10 @@ module AzaharaSchema
       association.macro == :belongs_to
     end
 
+    def searchable?
+      false
+    end
+
     def value(parent)
       if association.macro == :has_many
         parent.public_send(association.name).collect{|record| attribute.value( record )}.flatten
