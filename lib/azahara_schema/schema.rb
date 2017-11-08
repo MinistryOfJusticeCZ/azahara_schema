@@ -40,7 +40,7 @@ module AzaharaSchema
     end
 
     def searchable_attributes
-      @searchable_attributes ||= available_attributes.select{|a| a.is_a?(Attribute) && a.searchable? }
+      @searchable_attributes ||= available_attributes.select{|a| a.searchable? }
     end
 
     def column_names=(values)
@@ -211,8 +211,8 @@ module AzaharaSchema
         scope = att.add_sort(scope, order) if att
       end
       if (tokens = tokenize_search_query)
-        arl = searchable_attributes[0].arel_statement('~', tokens)
-        searchable_attributes[1..-1].each{|att| arl = arl.or( att.arel_statement('~', tokens) ) }
+        arl = searchable_attributes[0].arel_statement('~', tokens) if searchable_attributes.any?
+        Array(searchable_attributes[1..-1]).each{|att| arl = arl.or( att.arel_statement('~', tokens) ) }
         scope = scope.where(arl)
       end
       scope

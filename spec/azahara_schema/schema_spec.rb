@@ -10,6 +10,7 @@ RSpec.describe AzaharaSchema::Schema do
       [
         instance_double('AzaharaSchema::Attribute', name: 'id', type: 'integer'),
         instance_double('AzaharaSchema::Attribute', name: 'name', type: 'string'),
+        instance_double('AzaharaSchema::Attribute', name: 'gender', type: 'love'),
         instance_double('AzaharaSchema::Attribute', name: 'created_at', type: 'datetime')
       ]
     end
@@ -48,6 +49,30 @@ RSpec.describe AzaharaSchema::Schema do
         schema.column_names = []
         expect(attributes[1]).to receive(:add_statement).with(scope, '~', values)
         schema.add_filter('name', '~', values)
+        schema.entities
+      end
+    end
+
+    describe 'search_query' do
+      let(:scope) { instance_double('ActiveRecord::Relation', model: model) }
+
+      before(:each) do
+        allow(model).to receive(:visible).and_return(scope)
+        allow(schema).to receive(:searchable_attributes).and_return(attributes[1..2])
+      end
+
+      it 'adds search statements' do
+        first_or_res = instance_double('Arel::Nodes::Grouping')
+        second_or_res = instance_double('Arel::Nodes::Grouping')
+        grouped_res = instance_double('Arel::Nodes::Grouping')
+        schema.column_names = []
+        schema.search_query = 'Vondracek Nejedly'
+        tokens = schema.search_query.split
+        expect(attributes[1]).to receive(:arel_statement).with('~', tokens).and_return(first_or_res)
+        expect(attributes[2]).to receive(:arel_statement).with('~', tokens).and_return(second_or_res)
+        expect(first_or_res).to receive(:or).with(second_or_res).and_return(grouped_res)
+        expect(scope).to receive(:where).with(grouped_res).and_return(scope)
+        
         schema.entities
       end
     end
