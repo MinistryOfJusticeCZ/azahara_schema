@@ -271,7 +271,7 @@ module AzaharaSchema
       params = {}
       params[:f] = {}
       filters.each do |fname, attrs|
-        params[:f][fname] = "#{attrs[:o]}|#{attrs[:v].join('\\')}"
+        params[:f][fname] = "#{attrs[:o]}|#{attrs[:v].is_a?(Array) ? attrs[:v].collect{|v| v.to_s}.join('\\') : attrs[:v]}"
       end
       params[:c] = column_names
       params[:q] = search_query if params[:q]

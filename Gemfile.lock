@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    azahara_schema (0.1.9)
+    azahara_schema (0.1.10)
       rails (~> 5.0)
 
 GEM
