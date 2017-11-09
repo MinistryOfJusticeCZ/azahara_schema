@@ -46,12 +46,17 @@ module AzaharaSchema
       if association.macro == :has_many
         parent.public_send(association.name).collect{|record| attribute.value( record )}.flatten
       else
-        attribute.value( parent.public_send(association.name) )
+        entity = parent.public_send(association.name)
+        attribute.value( entity ) if entity
       end
     end
 
     def association_hash
       { association.name => attribute.association_hash }
+    end
+
+    def arel_statement(operator, values)
+      attribute.arel_statement(operator, values)
     end
 
     def add_join(scope)

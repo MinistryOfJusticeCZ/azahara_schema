@@ -211,6 +211,7 @@ module AzaharaSchema
         scope = att.add_sort(scope, order) if att
       end
       if (tokens = tokenize_search_query)
+        searchable_attributes.each{|a| scope = a.add_join(scope) }
         arl = searchable_attributes[0].arel_statement('~', tokens) if searchable_attributes.any?
         Array(searchable_attributes[1..-1]).each{|att| arl = arl.or( att.arel_statement('~', tokens) ) }
         scope = scope.where(arl)
@@ -227,8 +228,17 @@ module AzaharaSchema
       attr_hash = entity.as_json(options)
       # TODO serializable_add_includes(options) do |association, records, opts|
       columns.each do |col|
-        attr_hash[col.name] = col.available_values.detect{|l, v| v == attr_hash[col.name] }.try(:[], 0) if col.type == 'love'
-        attr_hash[col.name] = col.value(entity) if col.is_a?(AzaharaSchema::AggregationAttribute)
+        col_sub_hash = attr_hash
+        sub_col = col
+        while sub_col.is_a?(AzaharaSchema::AssociationAttribute)
+          col_sub_hash = (col_sub_hash[sub_col.association.name.to_s] ||= {})
+          sub_col = sub_col.attribute
+        end
+        if col.type == 'love'
+          col_sub_hash[sub_col.name] = sub_col.available_values.detect{|l, v| v == col_sub_hash[sub_col.name] }.try(:[], 0)
+        else
+          col_sub_hash[sub_col.name] = col.value(entity)
+        end
       end
       attr_hash
     end
@@ -261,7 +271,7 @@ module AzaharaSchema
       params = {}
       params[:f] = {}
       filters.each do |fname, attrs|
-        params[:f][fname] = "#{attrs[:o]}|#{attrs[:v]}"
+        params[:f][fname] = "#{attrs[:o]}|#{attrs[:v].join('\\')}"
       end
       params[:c] = column_names
       params[:q] = search_query if params[:q]

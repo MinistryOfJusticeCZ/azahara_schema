@@ -63,14 +63,15 @@ module AzaharaSchema
       record.public_send(name)
     end
 
+    # values has to be array!
     def arel_statement(operator, values)
-      values = [values] unless values.is_a?(Array)
       case operator
       when '='
         arel_field.in(values)
       when '~'
-        arl = arel_field.matches("%#{values[0]}%")
-        values[1..-1].each{|v| arl = arl.or( arel_field.matches("%#{v}%") ) }
+        vals = values.collect{|v| v.split }.flatten
+        arl = arel_field.matches("%#{vals[0]}%")
+        vals[1..-1].each{|v| arl = arl.or( arel_field.matches("%#{v}%") ) }
         arl
       when '>='
         arel_field.gteq(values.map(&:to_f).min)
@@ -81,11 +82,16 @@ module AzaharaSchema
       end
     end
 
+    def add_join(scope)
+      scope
+    end
+
     def add_preload(scope)
       scope
     end
 
     def add_statement(scope, operator, values)
+      values = [values] unless values.is_a?(Array)
       scope.where(arel_statement(operator, values))
     end
 
