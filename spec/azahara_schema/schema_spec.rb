@@ -68,11 +68,14 @@ RSpec.describe AzaharaSchema::Schema do
         schema.column_names = []
         schema.search_query = 'Vondracek Nejedly'
         tokens = schema.search_query.split
+
+        expect(attributes[1]).to receive(:add_join).with(scope).and_return(scope)
+        expect(attributes[2]).to receive(:add_join).with(scope).and_return(scope)
         expect(attributes[1]).to receive(:arel_statement).with('~', tokens).and_return(first_or_res)
         expect(attributes[2]).to receive(:arel_statement).with('~', tokens).and_return(second_or_res)
         expect(first_or_res).to receive(:or).with(second_or_res).and_return(grouped_res)
         expect(scope).to receive(:where).with(grouped_res).and_return(scope)
-        
+
         schema.entities
       end
     end
