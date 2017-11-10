@@ -75,12 +75,12 @@ module AzaharaSchema
     end
 
     def add_join(scope)
-      attributes.each{ scope = add_join(scope) }
+      attributes.each{|a| scope = a.add_join(scope) }
       scope
     end
 
     def add_preload(scope)
-      attributes.each{ scope = add_preload(scope) }
+      attributes.each{|a| scope = a.add_preload(scope) }
       scope
     end
 
