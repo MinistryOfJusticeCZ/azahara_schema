@@ -2,7 +2,7 @@ require 'azahara_schema/field_format'
 
 module AzaharaSchema
   class Attribute
-    attr_accessor :name, :format, :model
+    attr_accessor :name, :format, :model, :table_alias
 
     def initialize(model, name, type)
       @name, @model = name, model
@@ -26,8 +26,12 @@ module AzaharaSchema
       format.format_name
     end
 
-    def arel_field
-      model.arel_table[filter_name]
+    def arel_table(t_alias=self.table_alias)
+      t_alias ? model.arel_table.alias(t_alias) : model.arel_table
+    end
+
+    def arel_field(t_alias=self.table_alias)
+      arel_table(t_alias)[filter_name]
     end
 
     def arel_sort_field
@@ -109,6 +113,10 @@ module AzaharaSchema
 
     def association_hash
       {}
+    end
+
+    def arel_join(parent=nil, join_type=::Arel::Nodes::OuterJoin, a_tbl=self.arel_table(self.table_alias))
+      parent
     end
 
   end

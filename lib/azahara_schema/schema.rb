@@ -125,6 +125,7 @@ module AzaharaSchema
     def available_attributes
       unless @available_attributes
         initialize_available_attributes
+        @available_attributes.each{|at| at.table_alias = Array(association_path[1..-1]).collect(&:to_s).join('_').presence }
       end
       @available_attributes
     end
@@ -157,7 +158,7 @@ module AzaharaSchema
     end
 
     def association_path
-      @association_path ||= parent_schema ? ( [association.name].concat(parent_schema.association_path) ) : []
+      @association_path ||= parent_schema ? ( parent_schema.association_path + [association.name] ) : [model.model_name.element.to_sym]
     end
 
     def available_associations

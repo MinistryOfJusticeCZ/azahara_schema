@@ -48,7 +48,8 @@ module AzaharaSchema
       end
     end
 
-    def arel_field
+    # do not alias tables - let attributes derived from handle that
+    def arel_field(t_alias=nil)
       case derivation_method
       when :concat
         arel_fields = attributes.collect{|a| a.arel_field}

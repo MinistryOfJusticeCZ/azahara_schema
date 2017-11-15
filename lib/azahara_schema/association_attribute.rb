@@ -55,12 +55,27 @@ module AzaharaSchema
       { association.name => attribute.association_hash }
     end
 
+    def arel_join(parent=nil, join_type=::Arel::Nodes::OuterJoin, a_tbl=self.arel_table)
+      parent ||= a_tbl
+      joined = parent
+      case association.macro
+      when :has_many, :has_one
+        joined = parent.join(attribute.arel_table, join_type).on( attribute.arel_table[association.foreign_key].eq( a_tbl[model.primary_key] ) )
+      when :belongs_to
+        joined = parent.join(attribute.arel_table, join_type).on( attribute.arel_table[attribute.model.primary_key].eq( a_tbl[association.foreign_key] ) )
+      else
+        raise 'Unknown macro ' + association.macro.to_s
+      end
+      attribute.arel_join( joined )
+    end
+
     def arel_statement(operator, values)
       attribute.arel_statement(operator, values)
     end
 
     def add_join(scope)
-      scope.includes(association_hash).references(association_hash)
+      # scope.left_outer_joins(association_hash)
+      scope.joins(arel_join.join_sources)
     end
 
     def add_preload(scope)
