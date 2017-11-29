@@ -1,6 +1,8 @@
 module AzaharaSchema
   class Outputs
 
+    include Enumerable
+
     def self.registered_outputs
       @registered_outputs ||= {}
     end
@@ -24,6 +26,12 @@ module AzaharaSchema
 
     def output(output)
       self.class.output_class(output).new(@schema)
+    end
+
+    def each(&block)
+      @schema.enabled_outputs.each do |o|
+        yield output(o)
+      end
     end
 
   end

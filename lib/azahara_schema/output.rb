@@ -4,7 +4,11 @@ module AzaharaSchema
     attr_reader :schema
 
     def self.key
-      self.name.split('::').last.underscore
+      self.name.split('::').last.sub(/Output$/, '').underscore
+    end
+
+    def key
+      self.class.key
     end
 
     def initialize(schema)
@@ -21,6 +25,11 @@ module AzaharaSchema
 
     def model_i18n_key
       model_name.i18n_key
+    end
+
+    # rendering
+    def to_partial_path
+      'azahara_schema/outputs/'+key
     end
 
   end

@@ -1,0 +1,6 @@
+<% if local_assigns.fetch(:filters, true) %>
+  <%= render 'azahara_schema/filters', schema: schema %>
+<% end %>
+<% schema.outputs.each do |output| %>
+  <%= render output %>
+<% end %>

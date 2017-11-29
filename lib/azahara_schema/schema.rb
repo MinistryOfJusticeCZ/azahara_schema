@@ -29,7 +29,7 @@ module AzaharaSchema
       operators_for_filters[filter] = operators
     end
 
-    attr_accessor :model, :association, :parent_schema
+    attr_accessor :model, :enabled_outputs, :association, :parent_schema
     attr_accessor :search_query
 
     def initialize(model, **attributes)
@@ -37,6 +37,7 @@ module AzaharaSchema
       @association = attributes[:association]
       @parent_schema = attributes[:parent_schema]
       @column_names = attributes[:columns]
+      @enabled_outputs = attributes[:outputs] || default_outputs
     end
 
     def searchable_attributes
@@ -65,6 +66,10 @@ module AzaharaSchema
     end
 
     # DEFAULTS
+
+    def default_outputs
+      []
+    end
 
     def default_columns
       [main_attribute_name]
@@ -173,7 +178,9 @@ module AzaharaSchema
     end
 
     def attribute_for_column(col)
-      Attribute.new(model, col.name, col.type)
+      t = 'list' if model.defined_enums[col.name]
+      t ||= col.type
+      Attribute.new(model, col.name, t)
     end
 
     def initialize_available_attributes
@@ -199,23 +206,36 @@ module AzaharaSchema
       query.split if query
     end
 
-    def entities
-      scope = model.respond_to?(:visible) ? model.visible : model.all
-      columns.each do |col|
-        scope = col.add_preload(scope)
-      end
+    def entity_scope
+      model.respond_to?(:visible) ? model.visible : model.all
+    end
+
+    def filtered_scope
+      scope = entity_scope
       filters.each do |name, attrs|
         scope = available_filters[name].add_statement(scope, attrs[:o], attrs[:v])
-      end
-      sort.each do |name, order|
-        att = attribute(name)
-        scope = att.add_sort(scope, order) if att
       end
       if (tokens = tokenize_search_query)
         searchable_attributes.each{|a| scope = a.add_join(scope) }
         arl = searchable_attributes[0].arel_statement('~', tokens) if searchable_attributes.any?
         Array(searchable_attributes[1..-1]).each{|att| arl = arl.or( att.arel_statement('~', tokens) ) }
         scope = scope.where(arl)
+      end
+      scope
+    end
+
+    def entity_count
+      filtered_scope.count
+    end
+
+    def entities
+      scope = filtered_scope
+      columns.each do |col|
+        scope = col.add_preload(scope)
+      end
+      sort.each do |name, order|
+        att = attribute(name)
+        scope = att.add_sort(scope, order) if att
       end
       scope
     end

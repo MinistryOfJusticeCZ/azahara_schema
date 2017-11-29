@@ -26,5 +26,9 @@ module AzaharaSchema
       end
     end
 
+    def attribute_formatter_for(schema_or_model, **options)
+      AttributeFormatter.formatter_for(schema_or_model).new(schema_or_model, self, options)
+    end
+
   end
 end

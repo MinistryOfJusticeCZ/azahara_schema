@@ -7,8 +7,13 @@ module AzaharaSchema
       @attribute = attribute
     end
 
-    def human
-      I18n.t(i18n_scoped_key, default: i18n_fallback_keys)
+    def human(**options)
+      I18n.t(i18n_scoped_key, options.merge(default: i18n_fallback_keys))
+    end
+
+    def human_list_value(value, **options)
+      return '' unless value.present?
+      I18n.t(i18n_scoped_list_key(value.to_s), options.merge(default: i18n_list_fallback_keys(value)+[value.to_s]))
     end
 
     def model_i18n_key
@@ -19,8 +24,16 @@ module AzaharaSchema
       attribute.name
     end
 
+    def i18n_scope
+      'activerecord.attributes.' + model_i18n_key.to_s
+    end
+
     def i18n_scoped_key
-      ('activerecord.attributes.' + model_i18n_key.to_s + '.' + i18n_key.to_s).to_sym
+      (i18n_scope + '.' + i18n_key.to_s).to_sym
+    end
+
+    def i18n_scoped_list_key(value)
+      i18n_scope + '.' + i18n_key.to_s.pluralize + '.' + value.to_s
     end
 
     def i18n_fallback_keys
@@ -30,7 +43,18 @@ module AzaharaSchema
         keys.concat( parent_attr_name.i18n_fallback_keys )
         keys
       else
-        [ i18n_scoped_key.to_sym ]
+        []
+      end
+    end
+
+    def i18n_list_fallback_keys(value)
+      if attribute.respond_to?(:attribute)
+        parent_attr_name = attribute.attribute.attribute_name
+        keys = [ parent_attr_name.i18n_scoped_list_key(value).to_sym ]
+        keys.concat( parent_attr_name.i18n_list_fallback_keys(value) )
+        keys
+      else
+        []
       end
     end
   end
