@@ -56,7 +56,7 @@ module AzaharaSchema
     end
 
     def arel_join(parent=nil, join_type=::Arel::Nodes::OuterJoin, a_tbl=self.arel_table)
-      parent ||= a_tbl
+      parent ||= self.arel_table(nil)
       joined = parent
       case association.macro
       when :has_many, :has_one
