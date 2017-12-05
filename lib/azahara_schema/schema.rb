@@ -68,7 +68,7 @@ module AzaharaSchema
     # DEFAULTS
 
     def default_outputs
-      []
+      [AzaharaSchema::Outputs.registered_outputs.keys.first].compact
     end
 
     def default_columns
@@ -273,8 +273,8 @@ module AzaharaSchema
     #serialization
     def from_params(params)
       if params[:f]
-        filter_params = params[:f].permit(available_filters.keys).to_h
-        filter_params.each{|name, short_filter| add_short_filter(name, short_filter) }
+        filter_params = params[:f].permit(available_filters.keys + [available_filters.keys.inject({}){|o,name| o[name] = []; o }]).to_h
+        filter_params.each{|name, filter_value| filter_value.is_a?(Array) ? add_filter(name, '=', filter_value) : add_short_filter(name, filter_value) }
       end
       if params[:c].is_a?(Array)
         self.column_names = params[:c].to_a
