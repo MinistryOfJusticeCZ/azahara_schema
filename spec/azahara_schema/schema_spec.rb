@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-require 'azahara_schema/schema'
+require 'azahara_schema'
 
 RSpec.describe AzaharaSchema::Schema do
 
