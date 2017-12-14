@@ -75,6 +75,10 @@ module AzaharaSchema
       end
     end
 
+    def add_statement(scope, operator, values)
+      super(add_join(scope), operator, values)
+    end
+
     def add_join(scope)
       attributes.each{|a| scope = a.add_join(scope) }
       scope
