@@ -55,6 +55,10 @@ module AzaharaSchema
       def searchable?
         false
       end
+
+      def sanitize_value(value)
+        value
+      end
     end
 
     class NumberFormat < Base
@@ -69,6 +73,10 @@ module AzaharaSchema
 
     class IntegerFormat < NumberFormat
       add 'integer'
+
+      def sanitize_value(value)
+        value.to_s.present? ? value.to_s.to_i : nil
+      end
     end
 
     class FloatFormat < NumberFormat
@@ -92,6 +100,10 @@ module AzaharaSchema
 
       def searchable?
         true
+      end
+
+      def sanitize_value(value)
+        value.to_s.presence
       end
     end
 

@@ -69,9 +69,15 @@ module AzaharaSchema
 
     # values has to be array!
     def arel_statement(operator, values)
+      values = values.collect{|v| format.sanitize_value(v) }
       case operator
       when '='
-        arel_field.in(values)
+        condition = arel_field.in(values.compact) if values.compact.any?
+        if values.include?(nil)
+          c_nil = arel_field.eq(nil)
+          condition = condition ? condition.or(c_nil) : c_nil
+        end
+        condition
       when '~'
         vals = values.collect{|v| v.split }.flatten
         arl = arel_field.matches("%#{vals[0]}%")
