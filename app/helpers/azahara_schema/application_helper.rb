@@ -30,5 +30,9 @@ module AzaharaSchema
       AttributeFormatter.formatter_for(schema_or_model).new(schema_or_model, self, options)
     end
 
+    def unfilled_attribute_message
+      content_tag(:span, t('label_unfilled'), class: 'unfilled-message')
+    end
+
   end
 end

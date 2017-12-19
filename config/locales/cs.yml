@@ -3,3 +3,4 @@ cs:
   label_filters: Filtry
   label_advance_filters: Rozšířené
   label_use_setting: Zobrazit
+  unfilled_attribute_message: Nevyplněno
