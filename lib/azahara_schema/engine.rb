@@ -18,10 +18,10 @@ module AzaharaSchema
         end
       end
 
+      ActiveSupport.on_load(:action_controller) do
+        helper AzaharaSchema::ApplicationHelper
+      end
     end
 
-    config.to_prepare do
-      ::ApplicationController.helper(AzaharaSchema::ApplicationHelper)
-    end
   end
 end

@@ -274,7 +274,14 @@ module AzaharaSchema
     def from_params(params)
       if params[:f]
         filter_params = params[:f].permit(available_filters.keys + [available_filters.keys.inject({}){|o,name| o[name] = []; o }]).to_h
-        filter_params.each{|name, filter_value| filter_value.is_a?(Array) ? add_filter(name, '=', filter_value) : add_short_filter(name, filter_value) }
+        filter_params.each do |name, filter_value|
+          next if filter_value.blank?
+          if filter_value.is_a?(Array)
+            add_filter(name, '=', filter_value)
+          else
+            add_short_filter(name, filter_value)
+          end
+        end
       end
       if params[:c].is_a?(Array)
         self.column_names = params[:c].to_a
