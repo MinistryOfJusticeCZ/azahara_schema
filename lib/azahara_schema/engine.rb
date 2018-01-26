@@ -18,7 +18,7 @@ module AzaharaSchema
         end
       end
 
-      ActiveSupport.on_load(:action_controller) do
+      ActiveSupport.on_load(:action_controller_base) do
         helper AzaharaSchema::ApplicationHelper
       end
     end
