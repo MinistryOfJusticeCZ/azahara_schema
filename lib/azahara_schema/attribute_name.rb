@@ -32,8 +32,12 @@ module AzaharaSchema
       (i18n_scope + '.' + i18n_key.to_s).to_sym
     end
 
-    def i18n_scoped_list_key(value)
-      i18n_scope + '.' + i18n_key.to_s.pluralize + '.' + value.to_s
+    def i18n_scoped_list_prefix
+      i18n_scope + '.' + i18n_key.to_s.pluralize
+    end
+
+    def i18n_scoped_list_key(value, prefix=self.i18n_scoped_list_prefix)
+      prefix + '.' + value.to_s
     end
 
     def i18n_fallback_keys
@@ -47,15 +51,19 @@ module AzaharaSchema
       end
     end
 
-    def i18n_list_fallback_keys(value)
+    def i18n_list_fallback_prefixes
       if attribute.respond_to?(:attribute)
         parent_attr_name = attribute.attribute.attribute_name
-        keys = [ parent_attr_name.i18n_scoped_list_key(value).to_sym ]
-        keys.concat( parent_attr_name.i18n_list_fallback_keys(value) )
-        keys
+        prefixes = [ parent_attr_name.i18n_scoped_list_prefix ]
+        prefixes.concat( parent_attr_name.i18n_list_fallback_prefixes )
+        prefixes
       else
         []
       end
+    end
+
+    def i18n_list_fallback_keys(value)
+      prefixes.collect{|pref| i18n_scoped_list_key(value, pref) }
     end
   end
 end
