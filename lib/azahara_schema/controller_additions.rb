@@ -15,7 +15,7 @@ module AzaharaSchema
           elsif params['_type'] == 'count'
             json_result = {count: resource_schema.entity_count}
           else
-            json_result = resource_schema
+            json_result = {entities: resource_schema, count: resource_schema.entity_count}
           end
           render json: json_result
         }

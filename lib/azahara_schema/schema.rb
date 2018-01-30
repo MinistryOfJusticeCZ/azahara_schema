@@ -31,6 +31,7 @@ module AzaharaSchema
 
     attr_accessor :model, :enabled_outputs, :association, :parent_schema
     attr_accessor :search_query
+    attr_accessor :offset, :limit
 
     def initialize(model, **attributes)
       @model = model
@@ -237,6 +238,8 @@ module AzaharaSchema
         att = attribute(name)
         scope = att.add_sort(scope, order) if att
       end
+      scope = scope.offset(offset) if offset
+      scope = scope.limit(limit) if limit
       scope
     end
 
@@ -293,6 +296,8 @@ module AzaharaSchema
         end
       end
       self.search_query = params[:q] if params[:q]
+      self.offset = params[:offset] if params[:offset]
+      self.limit = params[:limit] if params[:limit]
     end
 
     def to_param
@@ -303,6 +308,8 @@ module AzaharaSchema
       end
       params[:c] = column_names
       params[:q] = search_query if params[:q]
+      params[:offset] = offset
+      params[:limit] = limit
       params
     end
 
