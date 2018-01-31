@@ -63,7 +63,7 @@ module AzaharaSchema
     end
 
     def i18n_list_fallback_keys(value)
-      prefixes.collect{|pref| i18n_scoped_list_key(value, pref) }
+      i18n_list_fallback_prefixes.collect{|pref| i18n_scoped_list_key(value, pref) }
     end
   end
 end
