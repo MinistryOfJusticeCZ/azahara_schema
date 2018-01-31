@@ -1,0 +1,7 @@
+<%= raw(CSV.generate(force_quotes: true) do |csv| %>
+  <% formatter = attribute_formatter_for(@resource_schema) %>
+  <% csv << @resource_schema.columns.collect{|c| c.attribute_name.human } %>
+  <% @resource_schema.entities.each do |entity| %>
+    <% csv << @resource_schema.columns.collect{|c| formatter.formatted_value(c, entity) } %>
+  <% end %>
+<% end) %>

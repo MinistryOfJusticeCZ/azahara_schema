@@ -5,6 +5,14 @@ module AzaharaSchema
       super(model, attrs)
     end
 
+    def export_template
+      'azahara_schema/exports/common'
+    end
+
+    def csv_template
+      export_template
+    end
+
     def always_visible_filters
       []
     end

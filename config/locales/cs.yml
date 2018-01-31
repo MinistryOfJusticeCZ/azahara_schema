@@ -4,3 +4,4 @@ cs:
   label_advance_filters: Rozšířené
   label_use_setting: Zobrazit
   label_unfilled: Nevyplněno
+  label_export_as: "Stáhnout %{as}"
