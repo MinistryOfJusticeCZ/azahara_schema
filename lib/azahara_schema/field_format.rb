@@ -107,7 +107,7 @@ module AzaharaSchema
       end
     end
 
-    class StringFormat < StringFormat
+    class TextFormat < StringFormat
       add 'text'
     end
 
