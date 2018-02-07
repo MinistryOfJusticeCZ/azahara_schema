@@ -107,6 +107,10 @@ module AzaharaSchema
       end
     end
 
+    class StringFormat < StringFormat
+      add 'text'
+    end
+
     class ListFormat < StringFormat
       add 'list'
 
