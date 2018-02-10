@@ -1,16 +1,17 @@
 module AzaharaSchema
   module ControllerAdditions
 
-    def azahara_schema_index(**options)
+    def azahara_schema_index(**options, &block)
       @resource_schema = self.class.cancan_resource_class.new(self).send(:collection_instance)
-      @resource_schema.from_params(params)
+      @resource_schema.from_params(params.reverse_merge(options[:defaults] || {}))
+      yield(@resource_schema) if block_given?
       respond_to do |format|
         format.html
         format.json {
           json_result = {}
           if params['_type'] == 'query'
             json_result[:results] = @resource_schema.entities.collect do |o|
-                {id: o.id, text: o.to_s, residence: o.person.residence.to_s}
+                {id: o.id, text: o.to_s}
               end
           elsif params['_type'] == 'count'
             json_result = {count: @resource_schema.entity_count}

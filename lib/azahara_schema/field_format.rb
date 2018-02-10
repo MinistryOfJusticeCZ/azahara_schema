@@ -89,6 +89,17 @@ module AzaharaSchema
 
     class BooleanFormat < Base
       add 'boolean'
+
+      def sanitize_value(value)
+        case value
+        when '0', 'false', false
+          false
+        when nil
+          nil
+        else
+          !!value
+        end
+      end
     end
 
     class StringFormat < Base
