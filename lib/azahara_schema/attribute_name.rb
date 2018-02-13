@@ -37,7 +37,7 @@ module AzaharaSchema
     end
 
     def i18n_scoped_list_key(value, prefix=self.i18n_scoped_list_prefix)
-      prefix + '.' + value.to_s
+      (prefix + '.' + value.to_s).to_sym
     end
 
     def i18n_fallback_keys
