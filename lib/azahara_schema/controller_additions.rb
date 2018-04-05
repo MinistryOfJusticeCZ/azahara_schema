@@ -2,9 +2,7 @@ module AzaharaSchema
   module ControllerAdditions
 
     def azahara_schema_index(**options, &block)
-      @resource_schema = self.class.cancan_resource_class.new(self).send(:collection_instance)
-      @resource_schema.from_params(params.reverse_merge(options[:defaults] || {}))
-      yield(@resource_schema) if block_given?
+      azahara_schema_for_index(options, &block)
       respond_to do |format|
         format.html
         format.json {
@@ -28,6 +26,28 @@ module AzaharaSchema
         }
       end
     end
+
+    def azahara_schema_api_index(**options, &block)
+      azahara_schema_for_index(options, &block)
+      respond_to do |format|
+        format.json {
+          json_result = {}
+          if params['_type'] == 'count'
+            json_result = {count: @resource_schema.entity_count}
+          else
+            json_result = {entities: @resource_schema, count: @resource_schema.entity_count}
+          end
+          render json: json_result
+        }
+      end
+    end
+
+    private
+      def azahara_schema_for_index(**options, &block)
+        @resource_schema = self.class.cancan_resource_class.new(self).send(:collection_instance)
+        @resource_schema.from_params(params.reverse_merge(options[:defaults] || {}))
+        yield(@resource_schema) if block_given?
+      end
 
   end
 end

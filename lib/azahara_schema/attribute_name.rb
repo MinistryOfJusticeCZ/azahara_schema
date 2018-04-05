@@ -11,6 +11,8 @@ module AzaharaSchema
       I18n.t(i18n_scoped_key, options.merge(default: i18n_fallback_keys))
     end
 
+    # translates values to list_values
+    # TODO: not needed to do it for every value - for example districts are not translatable
     def human_list_value(value, **options)
       return '' unless value.present?
       I18n.t(i18n_scoped_list_key(value.to_s), options.merge(default: i18n_list_fallback_keys(value)+[value.to_s]))

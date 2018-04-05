@@ -5,8 +5,10 @@
   <%= render output %>
 <% end %>
 <div class="exports text-right">
-  <%= link_to polymorphic_path(schema.model, schema.to_param.merge(format: :csv)) do %>
-    <i class="fa fa-file-o"></i>
-    <%= t('label_export_as', as: 'CSV') %>
+  <% if (csv_path = azahara_export_path(schema, :csv)) %>
+    <%= link_to csv_path do %>
+      <i class="fa fa-file-o"></i>
+      <%= t('label_export_as', as: 'CSV') %>
+    <% end %>
   <% end %>
 </div>

@@ -1,8 +1,9 @@
 module AzaharaSchema
   class ModelSchema < Schema
 
-    def initialize(**attrs)
-      super(model, attrs)
+    def initialize(*attrs)
+      attributes = attrs.last.is_a?(Hash) ? attrs.pop : {}
+      super(attrs.first || model, attributes)
     end
 
     def export_template

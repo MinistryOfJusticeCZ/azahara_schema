@@ -40,8 +40,12 @@ module AzaharaSchema
       end
     end
 
-    # translates values to list_values
-    # TODO: not needed to do it for every value - for example districts are not translatable
+    def azahara_export_path(schema, export_format)
+      polymorphic_path(schema.model, schema.to_param.merge(format: export_format))
+    rescue NoMethodError => err
+      nil
+    end
+
     def list_values_for_select(attribute)
       if attribute.format.format_name == 'list'
         attribute.available_values.collect do |l, val|
@@ -50,6 +54,10 @@ module AzaharaSchema
       else
         attribute.available_values
       end
+    end
+
+    def azahara_attribute_for(model, name)
+      AzaharaSchema::Schema.schema_class_for(model).attribute(model, name)
     end
 
     def attribute_formatter_for(schema_or_model, **options)

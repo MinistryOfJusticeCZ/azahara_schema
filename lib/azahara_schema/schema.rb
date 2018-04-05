@@ -3,7 +3,7 @@ require 'active_support' #Hash.slice
 module AzaharaSchema
   class Schema
 
-    def self.schema_for(klass, *attributes)
+    def self.schema_class_for(klass)
       klasses = [klass]
       while klass != klass.base_class
         klass = klass.superclass
@@ -11,9 +11,41 @@ module AzaharaSchema
       end
       klasses.each do |kls|
         schema_klass = "#{kls.name}Schema".safe_constantize
-        return schema_klass.new(*attributes) if schema_klass
+        return schema_klass if schema_klass
       end
-      AzaharaSchema::Schema.new(klass, *attributes)
+      AzaharaSchema::Schema
+    end
+
+    def self.schema_for(klass, *attributes)
+      model = klass
+      klasses = [klass]
+      while klass != klass.base_class
+        klass = klass.superclass
+        klasses << klass
+      end
+      klasses.each do |kls|
+        schema_klass = "#{kls.name}Schema".safe_constantize
+        if schema_klass
+          return kls.try(:abstract_class?) ? schema_klass.new(model, *attributes) : schema_klass.new(*attributes)
+        end
+      end
+      AzaharaSchema::Schema.new(model, *attributes)
+    end
+
+    def self.attribute_type(model, name)
+      col = model.columns_hash[name.to_s]
+      col && col.type
+    end
+
+    def self.attribute(model, name, attr_type=nil)
+      attr_type ||= attribute_type(model, name)
+      Attribute.new(model, name, attr_type)
+    end
+
+    def self.attribute_for_column(model, col, attr_type=nil)
+      attr_type ||= ('list' if model.defined_enums[col.name])
+      attr_type ||= col.type
+      attribute(model, col.name, attr_type)
     end
 
     def self.enabled_filters(*filter_names)
@@ -179,9 +211,7 @@ module AzaharaSchema
     end
 
     def attribute_for_column(col)
-      t = 'list' if model.defined_enums[col.name]
-      t ||= col.type
-      Attribute.new(model, col.name, t)
+      self.class.attribute_for_column(model, col)
     end
 
     def initialize_available_attributes
