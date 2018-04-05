@@ -66,7 +66,7 @@ module AzaharaSchema
       else
         raise 'Unknown macro ' + association.macro.to_s
       end
-      attribute.arel_join( joined )
+      attribute.arel_join( joined, join_type )
     end
 
     def arel_statement(operator, values)

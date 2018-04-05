@@ -79,6 +79,13 @@ module AzaharaSchema
       super(add_join(scope), operator, values)
     end
 
+    def arel_join(parent=nil, join_type=::Arel::Nodes::OuterJoin, a_tbl=self.arel_table(self.table_alias))
+      parent ||= self.arel_table(nil)
+      joined = parent
+      attributes.each{|a| joined = a.arel_join(joined, join_type) }
+      joined
+    end
+
     def add_join(scope)
       attributes.each{|a| scope = a.add_join(scope) }
       scope
