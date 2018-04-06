@@ -22,6 +22,11 @@ module AzaharaSchema
       super(model, association.name.to_s+'-'+attribute.name, attribute.type)
     end
 
+    # Goes to the last level, for attribute base schema
+    def base_schema
+      attribute.try(:schema) || schema
+    end
+
     def available_values
       attribute.available_values
     end
@@ -30,12 +35,16 @@ module AzaharaSchema
       attribute.arel_field
     end
 
+    def primary_key_name
+      association.name.to_s+'-'+attribute.primary_key_name
+    end
+
     def path
       association.name.to_s+'.'+attribute.path
     end
 
     def column?
-      association.macro == :belongs_to
+      association.macro == :belongs_to && attribute.column?
     end
 
     def searchable?

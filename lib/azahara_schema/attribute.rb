@@ -47,6 +47,11 @@ module AzaharaSchema
       name
     end
 
+    # Name of the primary key attribute (same as column obviously)
+    def primary_key_name
+      model.primary_key
+    end
+
     def column?
       true
     end
