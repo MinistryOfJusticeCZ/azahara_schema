@@ -16,23 +16,23 @@ RSpec.describe AzaharaSchema::Schema do
     end
     let(:schema) { s = AzaharaSchema::Schema.new(model); allow(s).to receive(:available_attributes).and_return(attributes); s }
 
-    describe '#available_filters' do
+    describe '#user_available_filters' do
 
       context 'with enabled_filters overwritten' do
         before(:each) { allow(AzaharaSchema::Schema).to receive(:enabled_filters).and_return(['name', 'created_at']) }
 
         it 'returns attributes enabled on class' do
-          expect(schema.available_filters.keys).to eq(['name', 'created_at'])
+          expect(schema.user_available_filters.keys).to eq(['name', 'created_at'])
         end
 
         it 'returns just attributes enabled on both - class and instance' do
           allow(schema).to receive(:enabled_filters).and_return(['name'])
-          expect(schema.available_filters.keys).to eq(['name'])
+          expect(schema.user_available_filters.keys).to eq(['name'])
         end
 
         it 'returns attributes enabled on class but without disabled on instance' do
           allow(schema).to receive(:disabled_filters).and_return(['created_at'])
-          expect(schema.available_filters.keys).to eq(['name'])
+          expect(schema.user_available_filters.keys).to eq(['name'])
         end
       end
     end
