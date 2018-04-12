@@ -92,6 +92,9 @@ module AzaharaSchema
         arel_field.gteq(values.map(&:to_f).min)
       when '<='
         arel_field.lteq(values.map(&:to_f).max)
+      when '@>'
+        require 'arel/azahara_postgres_exts'
+        arel_field.contains(values)
       else
         throw 'Unknown operator ' + operator.to_s
       end

@@ -18,5 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 5.1"
 
+  # s.add_dependency 'postgres_ext', '~> 3.0'
+
   s.add_development_dependency "sqlite3"
 end

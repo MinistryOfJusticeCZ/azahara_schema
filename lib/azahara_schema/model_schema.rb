@@ -32,11 +32,11 @@ module AzaharaSchema
 
     # dummy implementations for rewrite
     def uncollapsable_filters
-      available_filters.select{|name, filter| always_visible_filters.include?(name) }
+      user_available_filters.select{|name, filter| always_visible_filters.include?(name) }
     end
 
     def collapsable_filters
-      available_filters.select{|name, filter| !always_visible_filters.include?(name) }
+      user_available_filters.select{|name, filter| !always_visible_filters.include?(name) }
     end
 
     # rendering

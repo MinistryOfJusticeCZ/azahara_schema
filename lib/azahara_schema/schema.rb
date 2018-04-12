@@ -192,7 +192,11 @@ module AzaharaSchema
     end
 
     def available_filters
-      @available_filters ||= available_attributes_hash.slice(*enabled_filter_names)
+      @available_filters ||= available_attributes_hash
+    end
+
+    def user_available_filters
+      available_filters.slice(*enabled_filter_names)
     end
 
     def association_path
