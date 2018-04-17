@@ -84,7 +84,7 @@ module AzaharaSchema
     def format_value(attribute, unformated_value, **options)
       case attribute.type
       when 'datetime'
-        l(unformated_value)
+        unformated_value ? l(unformated_value) : unformated_value
       else
         unformated_value
       end

@@ -32,5 +32,9 @@ module AzaharaSchema
       'azahara_schema/outputs/'+key
     end
 
+    def formatter(template)
+      template.attribute_formatter_for(schema)
+    end
+
   end
 end

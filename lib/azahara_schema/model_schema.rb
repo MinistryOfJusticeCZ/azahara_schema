@@ -23,7 +23,7 @@ module AzaharaSchema
     end
 
     def visibility_scope!(ability, authorization_action=:index)
-      @entity_scope = model.accessible_by(ability, authorization_action)
+      @entity_scope = entity_scope.accessible_by(ability, authorization_action)
     end
 
     def entity_scope

@@ -62,7 +62,7 @@ module AzaharaSchema
     end
 
     attr_accessor :model, :enabled_outputs, :association, :parent_schema
-    attr_accessor :search_query
+    attr_accessor :search_query, :default_scope
     attr_accessor :offset, :limit
 
     def initialize(model, **attributes)
@@ -242,7 +242,9 @@ module AzaharaSchema
     end
 
     def entity_scope
-      model.respond_to?(:visible) ? model.visible : model.all
+      scope = model.respond_to?(:visible) ? model.visible : model.all
+      scope.send(self.default_scope) if self.default_scope
+      scope
     end
 
     def filtered_scope
@@ -329,6 +331,7 @@ module AzaharaSchema
           add_sort(sort[:path], sort['desc'] == 'true' ? :desc : :asc )
         end
       end
+      self.default_scope = params[:default_scope] if params[:default_scope]
       self.search_query = params[:q] if params[:q]
       self.offset = params[:offset] if params[:offset]
       self.limit = params[:limit] if params[:limit]
@@ -340,6 +343,7 @@ module AzaharaSchema
       filters.each do |fname, attrs|
         params[:f][fname] = "#{attrs[:o]}|#{Array(attrs[:v]).collect{|v| v.to_s}.join('\\')}"
       end
+      params[:default_scope] = default_scope if default_scope
       params[:c] = column_names
       params[:q] = search_query if params[:q]
       params[:offset] = offset
