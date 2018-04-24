@@ -81,6 +81,10 @@ module AzaharaSchema
 
     class FloatFormat < NumberFormat
       add 'float'
+
+      def sanitize_value(value)
+        value.to_s.present? ? value.to_s.to_f : nil
+      end
     end
 
     class DecimalFormat < FloatFormat

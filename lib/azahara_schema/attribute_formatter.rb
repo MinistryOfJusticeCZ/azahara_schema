@@ -60,11 +60,11 @@ module AzaharaSchema
     end
 
     def formatted_value(attribute, entity, **options)
-      real_formatter(attribute).format_value(attribute, attribute_human_value(attribute, entity), options)
+      real_formatter(attribute).format_value(attribute, attribute_human_value(attribute, entity), formatting_options(attribute,entity).merge(options))
     end
 
     def html_formatted_value(attribute, entity, **options)
-      format_value_html(attribute, attribute.value(entity), options)
+      format_value_html(attribute, attribute.value(entity), formatting_options(attribute,entity).merge(options))
     end
 
     def attribute_html_label(attribute, **options)
@@ -92,6 +92,10 @@ module AzaharaSchema
 
     def format_value_html(attribute, unformated_value, **options)
       formated_value = real_formatter(attribute).format_value(attribute, unformated_value, options)
+    end
+
+    def formatting_options(attribute, entity)
+      {}
     end
 
     def real_formatter(attribute)
