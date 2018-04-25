@@ -243,7 +243,7 @@ module AzaharaSchema
 
     def entity_scope
       scope = model.respond_to?(:visible) ? model.visible : model.all
-      scope.send(self.default_scope) if self.default_scope
+      scope = scope.send(self.default_scope) if self.default_scope
       scope
     end
 
