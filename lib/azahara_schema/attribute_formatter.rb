@@ -47,16 +47,21 @@ module AzaharaSchema
       'fa'
     end
 
-    def attribute_human_value(attribute, entity, **options)
-      val = attribute.value(entity)
+    def human_value(attribute, value, **options)
       case attribute.type
       when 'love'
-        attribute.available_values.detect{|l, v| v == val }.try(:[], 0)
+        attribute.available_values.detect{|l, v| v == value }.try(:[], 0)
       when 'list'
-        attribute.attribute_name.human_list_value(val, options)
+        attribute.attribute_name.human_list_value(value, options)
+      when 'datetime'
+        value ? l(value) : value
       else
-        val
+        value
       end
+    end
+
+    def attribute_human_value(attribute, entity, **options)
+      human_value(attribute, attribute.value(entity))
     end
 
     def formatted_value(attribute, entity, **options)
@@ -64,7 +69,7 @@ module AzaharaSchema
     end
 
     def html_formatted_value(attribute, entity, **options)
-      format_value_html(attribute, attribute.value(entity), formatting_options(attribute,entity).merge(options))
+      format_value_html(attribute, attribute_human_value(attribute, entity, options), formatting_options(attribute,entity).merge(options))
     end
 
     def attribute_html_label(attribute, **options)
@@ -75,19 +80,14 @@ module AzaharaSchema
       template.content_tag('div', class: 'attribute') do
         s = ''.html_safe
         s << template.content_tag('div', attribute_html_label(attribute, options), class: 'label')
-        s << template.content_tag('div', format_value_html(attribute, attribute.value(entity), options), class: 'value')
+        s << template.content_tag('div', html_formatted_value(attribute, entity, options), class: 'value')
         s
       end
     end
 
 
     def format_value(attribute, unformated_value, **options)
-      case attribute.type
-      when 'datetime'
-        unformated_value ? l(unformated_value) : unformated_value
-      else
-        unformated_value
-      end
+      unformated_value
     end
 
     def format_value_html(attribute, unformated_value, **options)

@@ -32,9 +32,13 @@ module AzaharaSchema
       AzaharaSchema::Schema.new(model, *attributes)
     end
 
-    def self.attribute_type(model, name)
-      col = model.columns_hash[name.to_s]
-      col && col.type
+    def self.attribute_type(model, name, col=nil)
+      col ||= model.columns_hash[name.to_s]
+      if model.defined_enums[col.name]
+        'list'
+      else
+        col && col.type
+      end
     end
 
     def self.attribute(model, name, attr_type=nil)
@@ -43,9 +47,7 @@ module AzaharaSchema
     end
 
     def self.attribute_for_column(model, col, attr_type=nil)
-      attr_type ||= ('list' if model.defined_enums[col.name])
-      attr_type ||= col.type
-      attribute(model, col.name, attr_type)
+      attribute(model, col.name, attr_type || attribute_type(model, col.name, col) )
     end
 
     def self.enabled_filters(*filter_names)
