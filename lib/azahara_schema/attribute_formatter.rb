@@ -91,7 +91,7 @@ module AzaharaSchema
     end
 
     def format_value_html(attribute, unformated_value, **options)
-      formated_value = real_formatter(attribute).format_value(attribute, unformated_value, options)
+      real_formatter(attribute).format_value(attribute, unformated_value, options) || template.unfilled_attribute_message
     end
 
     def formatting_options(attribute, entity)

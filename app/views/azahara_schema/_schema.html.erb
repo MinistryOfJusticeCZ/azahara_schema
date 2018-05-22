@@ -2,7 +2,7 @@
   <%= render 'azahara_schema/index_form', schema: schema %>
 <% end %>
 <% schema.outputs.each do |output| %>
-  <%= render output, schema: schema %>
+  <%= render output, local_assigns.merge(schema: schema) %>
 <% end %>
 <div class="exports text-right">
   <% if (csv_path = azahara_export_path(schema, :csv)) %>
