@@ -1,5 +1,19 @@
+<%
+  create_attributes ||= {}
+  create_model      ||= schema.model
+%>
+
 <% if local_assigns.fetch(:filters, true) %>
   <%= render 'azahara_schema/index_form', schema: schema %>
+<% end %>
+<% if local_assigns.fetch(:show_toolbar, false) %>
+  <div class="btn-toolbar text-right" role="toolbar" aria-label="Toolbar">
+    <% if can?(:create, create_model) %>
+      <div class="btn-group" role="group" aria-label="<%= t('label_actions') %>">
+        <%= link_to t('common_labels.new_record', model: create_model.model_name.human), new_polymorphic_path(create_model, create_attributes), class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  </div>
 <% end %>
 <% schema.outputs.each do |output| %>
   <%= render output, local_assigns.merge(schema: schema) %>

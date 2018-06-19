@@ -55,6 +55,8 @@ module AzaharaSchema
         attribute.attribute_name.human_list_value(value, options)
       when 'datetime'
         value ? l(value) : value
+      when 'date'
+        value ? l(value.to_date) : value
       else
         value
       end
