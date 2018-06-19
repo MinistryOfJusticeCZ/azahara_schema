@@ -23,7 +23,6 @@ test:2.3:
     - export LANGUAGE=en_US.UTF-8
     - export LC_ALL=en_US.UTF-8
     - export RUBYOPT="-KU -E utf-8:utf-8"
-    - export BUNDLE_GEMFILE="Gemfile_devel"
     - export http_proxy="http://proxy.justice.cz:3128/"
     - export https_proxy="http://proxy.justice.cz:3128/"
     - export no_proxy="git.servis.justice.cz"
