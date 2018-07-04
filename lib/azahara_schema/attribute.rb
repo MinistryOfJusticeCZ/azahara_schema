@@ -77,7 +77,7 @@ module AzaharaSchema
       values = values.collect{|v| format.sanitize_value(v) }
       case operator
       when '='
-        condition = arel_field.in(values.compact) if values.compact.any?
+        condition = arel_field.in(values.compact) unless values.compact.empty?
         if values.include?(nil)
           c_nil = arel_field.eq(nil)
           condition = condition ? condition.or(c_nil) : c_nil
