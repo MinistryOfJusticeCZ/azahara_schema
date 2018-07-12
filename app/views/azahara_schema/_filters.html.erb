@@ -4,13 +4,13 @@
       <%= azahara_filter_row(schema, filter, name) %>
     <% end %>
   </div>
-  <% if schema.collapsable_filters.any? || lookup_context.template_exists?("#{schema.model.model_name.plural}/_additional_filters") %>
+  <% if schema.collapsable_filters.any? || lookup_context.template_exists?("#{ActiveSupport::Inflector.tableize(schema.model.name)}/_additional_filters") %>
     <div id="filters_collapsable" class="collapse">
       <% schema.collapsable_filters.each do |name, filter| %>
         <%= azahara_filter_row(schema, filter, name) %>
       <% end %>
-      <% if lookup_context.template_exists?("#{schema.model.model_name.plural}/_additional_filters") %>
-        <%= render "#{schema.model.model_name.plural}/additional_filters", schema: schema %>
+      <% if lookup_context.template_exists?("#{ActiveSupport::Inflector.tableize(schema.model.name)}/_additional_filters") %>
+        <%= render "#{ActiveSupport::Inflector.tableize(schema.model.name)}/additional_filters", schema: schema %>
       <% end %>
     </div>
     <div class="collapse-actions" style="text-align: center;">

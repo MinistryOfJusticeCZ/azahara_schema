@@ -243,8 +243,12 @@ module AzaharaSchema
       query.split if query
     end
 
-    def entity_scope
-      scope = model.respond_to?(:visible) ? model.visible : model.all
+    def base_scope
+      model.all
+    end
+
+    def entity_scope(scope=base_scope)
+      scope = scope.visible if scope.respond_to?(:visible)
       scope = scope.send(self.default_scope) if self.default_scope
       scope
     end

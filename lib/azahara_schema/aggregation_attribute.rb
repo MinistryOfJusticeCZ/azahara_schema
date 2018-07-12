@@ -21,7 +21,9 @@ module AzaharaSchema
     end
 
     def value(parent)
-      attribute.attribute.add_join( parent.send(attribute.association.name) ).sum(attribute.arel_field).to_f
+      val = attribute.attribute.add_join( parent.send(attribute.association.name) ).sum(attribute.arel_field)
+      val = BigDecimal.new(val.to_s) unless val.is_a?(BigDecimal)
+      val
     end
 
   end
