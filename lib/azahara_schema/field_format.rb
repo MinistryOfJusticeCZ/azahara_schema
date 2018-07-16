@@ -132,6 +132,10 @@ module AzaharaSchema
       def available_operators
         ['=']
       end
+
+      def searchable?
+        false
+      end
     end
 
     class LoveFormat < ListFormat
