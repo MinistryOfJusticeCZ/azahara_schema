@@ -1,6 +1,18 @@
 module AzaharaSchema
   module ApplicationHelper
 
+    def label_record_action(model)
+      model_name = model.model_name.human
+      key = model.persisted? ? :edit : :new
+
+      defaults = []
+      defaults << :"helpers.action.#{model.model_name.i18n_key}.#{key}"
+      defaults << :"helpers.action.#{key}"
+      defaults << "#{key.to_s.humanize} #{model_name}"
+
+      t(defaults.shift, model: model_name, default: defaults)
+    end
+
     def operators_for_select(schema, filter_name)
       schema.operators_for(filter_name).collect{|o| [o, o]}
     end

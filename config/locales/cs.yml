@@ -5,3 +5,9 @@ cs:
   label_use_setting: Zobrazit
   label_unfilled: Nevyplněno
   label_export_as: "Stáhnout %{as}"
+
+  helpers:
+    action:
+      new: Vytvořit %{model}
+      edit: Upravit %{model}
+
