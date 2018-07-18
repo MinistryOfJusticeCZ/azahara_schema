@@ -338,7 +338,7 @@ module AzaharaSchema
         end
       end
       self.default_scope = params[:default_scope] if params[:default_scope]
-      self.search_query = params[:q] if params[:q]
+      self.search_query = params[:q] unless params[:q].blank?
       self.offset = params[:offset] if params[:offset]
       self.limit = params[:limit] if params[:limit]
     end
