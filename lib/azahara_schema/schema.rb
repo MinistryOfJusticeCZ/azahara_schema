@@ -73,6 +73,7 @@ module AzaharaSchema
       @parent_schema = attributes[:parent_schema]
       @column_names = attributes[:columns]
       @enabled_outputs = attributes[:outputs] || default_outputs
+      @nested_relations_depth = attributes[:relations_depth]
     end
 
     def searchable_attributes
@@ -119,8 +120,12 @@ module AzaharaSchema
       available_attributes.detect{|att| att.name != 'id' }.name
     end
 
-    def follow_nested_relations
-      true
+    def nested_relations_depth
+      @nested_relations_depth || 4
+    end
+
+    def include_associated_attributes?
+      nested_relations_depth > 0
     end
 
     # ACCESSORS
@@ -206,13 +211,14 @@ module AzaharaSchema
     end
 
     def available_associations
+      return [] unless include_associated_attributes?
       @available_associations ||= model.reflect_on_all_associations.select do |association|
         !association.options[:polymorphic] &&
           association.klass != model &&
           !association_path.include?( association.name.to_s.singularize.to_sym ) &&
           !association_path.include?( association.name.to_s.pluralize.to_sym )
       end.collect do |association|
-        AzaharaSchema::Schema.schema_for(association.klass, parent_schema: self, association: association)
+        AzaharaSchema::Schema.schema_for(association.klass, parent_schema: self, association: association, relations_depth: nested_relations_depth.try(:-, 1))
       end
     end
 
