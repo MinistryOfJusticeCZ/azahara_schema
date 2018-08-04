@@ -61,7 +61,7 @@ module AzaharaSchema
     end
 
     def value(record)
-      attributes.collect{|a| a.value(record) }.join(concat_divider)
+      record.try(name) || attributes.collect{|a| a.value(record) }.join(concat_divider)
     end
 
     def arel_statement(operator, values)
