@@ -98,7 +98,7 @@ module AzaharaSchema
     end
 
     def sort
-      @sort ||= default_sort
+      @sort ||= ActiveSupport::OrderedHash.new.merge!(default_sort)
     end
 
     # DEFAULTS
@@ -282,7 +282,7 @@ module AzaharaSchema
       columns.each do |col|
         scope = col.add_preload(scope)
       end
-      sort.each do |name, order|
+      sort.invert.each do |name, order|
         att = attribute(name)
         scope = att.add_sort(scope, order) if att
       end
