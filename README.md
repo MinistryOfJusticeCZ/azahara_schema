@@ -1,4 +1,5 @@
 [![pipeline status](https://git.servis.justice.cz/libraries/azahara_schema/badges/master/pipeline.svg)](https://git.servis.justice.cz/libraries/azahara_schema/commits/master)
+[![Gem Version](https://badge.fury.io/rb/azahara_schema.svg)](https://badge.fury.io/rb/azahara_schema)
 
 # AzaharaSchema
 
