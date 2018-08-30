@@ -282,9 +282,9 @@ module AzaharaSchema
       columns.each do |col|
         scope = col.add_preload(scope)
       end
-      sort.invert.each do |name, order|
+      sort.keys.reverse.each do |name|
         att = attribute(name)
-        scope = att.add_sort(scope, order) if att
+        scope = att.add_sort(scope, sort[name]) if att
       end
       scope = scope.offset(offset) if offset
       scope = scope.limit(limit) if limit
