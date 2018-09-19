@@ -69,11 +69,11 @@ module AzaharaSchema
     end
 
     def azahara_attribute_for(model, name)
-      AzaharaSchema::Schema.schema_class_for(model).attribute(model, name)
+      ::AzaharaSchema::Schema.schema_class_for(model).attribute(model, name)
     end
 
     def attribute_formatter_for(schema_or_model, **options)
-      AttributeFormatter.formatter_for(schema_or_model).new(schema_or_model, self, options)
+      ::AzaharaSchema::Presenter.formatter_for(schema_or_model).new(schema_or_model, self, options)
     end
 
     def unfilled_attribute_message

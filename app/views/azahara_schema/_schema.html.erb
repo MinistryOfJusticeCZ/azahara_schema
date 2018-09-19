@@ -2,6 +2,8 @@
   create_attributes ||= {}
   create_model      ||= schema.model
   create_model      =   create_model.new
+  create_scope      ||= []
+  create_scope      = create_scope.dup.push(create_model)
 %>
 
 <% if local_assigns.fetch(:filters, true) %>
@@ -11,7 +13,7 @@
   <div class="btn-toolbar text-right" role="toolbar" aria-label="Toolbar">
     <% if can?(:create, create_model) %>
       <div class="btn-group" role="group" aria-label="<%= t('label_actions') %>">
-        <%= link_to label_record_action(create_model), new_polymorphic_path(create_model, create_attributes), class: 'btn btn-primary' %>
+        <%= link_to label_record_action(create_model), new_polymorphic_path(create_scope, create_attributes), class: 'btn btn-primary' %>
       </div>
     <% end %>
   </div>

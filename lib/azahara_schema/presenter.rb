@@ -1,12 +1,12 @@
 module AzaharaSchema
-  class AttributeFormatter
+  class Presenter
 
     def self.default_formatter=(formatter_klass)
       @default_formatter = formatter_klass
     end
 
     def self.default_formatter
-      @default_formatter || AzaharaSchema::AttributeFormatter
+      @default_formatter || AzaharaSchema::Presenter
     end
 
     def self.formatter_for(schema_or_entity)
@@ -19,7 +19,7 @@ module AzaharaSchema
         klasses << klass
       end
       klasses.each do |kls|
-        schema_klass = "#{kls.name}Formatter".safe_constantize || "Formatters::#{kls.name}Formatter".safe_constantize
+        schema_klass = "#{kls.name}Presenter".safe_constantize || "Presenters::#{kls.name}Presenter".safe_constantize
         return schema_klass if schema_klass
       end
       default_formatter

@@ -8,7 +8,7 @@ require 'azahara_schema/outputs'
 require 'azahara_schema/output'
 require 'azahara_schema/schema'
 require 'azahara_schema/model_schema'
-require 'azahara_schema/attribute_formatter'
+require 'azahara_schema/presenter'
 
 if Object.const_defined?('Rails')
   require "azahara_schema/engine"
