@@ -9,12 +9,12 @@ Gem::Specification.new do |s|
   s.version     = AzaharaSchema::VERSION
   s.authors     = ["Ondřej Ezr"]
   s.email       = ["oezr@msp.justice.cz"]
-  s.homepage    = "http://git.justice.cz/libraries/azahara_schema"
+  s.homepage    = "https://git.justice.cz/libraries/azahara_schema"
   s.summary     = "Gem to support developement of rails application with schema over an entity"
   s.description = "This gem should provide complete tools for quick developement of easy registry app in RoR."
-  s.license     = "MIT"
+  s.license     = "EUPL"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "rails", "~> 5.1"
 
