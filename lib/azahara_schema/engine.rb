@@ -21,6 +21,10 @@ module AzaharaSchema
       ActiveSupport.on_load(:action_controller_base) do
         helper AzaharaSchema::ApplicationHelper
       end
+
+      ActiveSupport.on_load(:action_mailer) do
+        helper AzaharaSchema::ApplicationHelper
+      end
     end
 
   end
