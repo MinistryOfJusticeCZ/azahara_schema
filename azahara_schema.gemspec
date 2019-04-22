@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://git.justice.cz/libraries/azahara_schema"
   s.summary     = "Gem to support developement of rails application with schema over an entity"
   s.description = "This gem should provide complete tools for quick developement of easy registry app in RoR."
-  s.license     = "EUPL"
+  s.license     = "EUPL-1.2"
 
   s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.md"]
 
