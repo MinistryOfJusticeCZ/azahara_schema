@@ -81,4 +81,4 @@ Or you can use all those methods together.
 Contribution directions go here.
 
 ## License
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+The gem is available as open source under the terms of the [EUPL License in version 1.2](https://opensource.org/licenses/EUPL-1.2).
